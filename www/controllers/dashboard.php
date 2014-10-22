@@ -195,6 +195,7 @@
 				//echo "cccchenejiweie";
 				if($r['sts']==1) {
 					$this->project->CancelProject_by_code($project_code);
+					$this->data['addsuccess']=true;
 				}
 				else { $error[]="该项目已经被取消或者不存在";}
 				$this->data['error'] = $error;
@@ -245,8 +246,8 @@
 				$project_code =$this->input->post("project_code", true);
 				$project_id =$this->input->post("project_id", true);
 				$report_view =$this->input->post("report_view", true);
-				$project_unit_bh=$this->input->post("project_unit_bh", true);
-				$project_unit_name=$this->input->post("project_unit_name", true);
+				//$project_unit_name=$this->input->post("project_unit_name", true);
+				//$project_unit_price=$this->input->post("project_unit_price", true);
 				
 				//echo $add_view."asdasfafadsf";
 				//echo $report_view."   hahxidsfadfasf";
@@ -256,13 +257,40 @@
 					//echo "1fafasdfasdf";
 				}
 				else{
-					//echo $project_unit_bh."   hahxidsfadfasf";
+					//var_dump($project_unit_bh);//."   hahxidsfadfasf";
 					//foreach($project_unit_name as $u)
 					//	echo $u."   hahxidsfadfasf";
+					
+					$shr=$this->input->post("shr", true);
+					$hourcount=$this->input->post("hourcount", true);
+					$worklogproject=$this->input->post("worklogproject", true);
+					$project_unit_amount=$this->input->post("project_unit_amount", true);
+					$project_unit_bh=$this->input->post("project_unit_bh", true);
+					
+					if(@$project_unit_bh && $project_unit_bh!="")
+						$project_unit_bh=array_filter($project_unit_bh);
+					
+					if(@$project_unit_amount && $project_unit_amount!="")
+						$project_unit_amount=array_filter($project_unit_amount);
+
+					var_dump($project_unit_bh);
+					var_dump($project_unit_amount);
+					if(@$hourcount && $hourcount){
+						if(@$project_unit_bh && $project_unit_bh!=""){
+							if(count($project_unit_bh)==count($project_unit_amount)){
+								$this->project->usr_report_project($project_id,$hourcount,$this->username,
+									$project_unit_amount,$worklogproject,$shr,$project_unit_bh,$shr);
+								$this->data['addsuccess']=true;
+							}else {$error[] = "所有申报材料的数量必须填写";}
+						}else {$error[] = "至少申报一项材料";}
+					}else {$error[] = "工作时长不能为空";}
+
+					
 				}
 				$this->data['project_code']=$project_code;
 				$this->data['project_id']=$project_id;
 			}
+			$this->data['error'] = $error;
 			$this->data['all_shr']=$this->project->Search_role(0b0010);
 			$this->data['all_unit']=$this->project->Search_Unit();			
 			$this->load->view("dashboard/UsrProjectReport", $this->data);

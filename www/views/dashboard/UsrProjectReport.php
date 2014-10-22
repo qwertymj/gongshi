@@ -69,7 +69,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 <tbody id='project_add_unit_table'>
                 <tr> 
                     <td>
-                        <select name='project_unit_bh[]' >
+                        <select name='project_unit_bh[]' onChange="changeData(this)">
                         <?php foreach($all_unit as $unit){
                             echo "<option value='".$unit['bh']."'>".$unit['bh']."</option>";
                         }
@@ -97,21 +97,24 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 </tbody>
             </table>
         </label>
-</div>
+</div>      
             <script type="text/javascript">  
-           
+            <? $all_unitJson = json_encode($all_unit);
+            echo "var data =".$all_unitJson;?>
             // $(document).ready(function(){ 
             //     //$("table tr td input").css("width","50");
             //     $("table tr td").css("width","50");
             // }); 
-            $(document).ready(function(){
-                $("button").click(function(){
-                    $("p").css("background-color","red");
-                });
-            });
+            function changeData(tt){
+                $(tt).parent().next().text(data[tt.selectedIndex]['workunit']);
+                $(tt).parent().next().next().text(data[tt.selectedIndex]['unitname']);
+                $(tt).parent().next().next().next().text(data[tt.selectedIndex]['price']);
+                //alert(ii.html());
+
+            }
                 $('#project_add_unit').click(function() {
                     $('#project_add_unit_table').append("<tr><td>\
-                        <select name='project_unit_bh[]' >\
+                        <select name='project_unit_bh[]' onChange='changeData(this)'>\
                         <?php foreach($all_unit as $unit){echo "<option value='".$unit['bh']."'>".$unit['bh']."</option>";}?>\
                     </td><td><?echo $all_unit[0]['workunit']?></td>\
                     <td><?echo $all_unit[0]['unitname']?></td>\

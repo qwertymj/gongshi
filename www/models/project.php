@@ -93,6 +93,47 @@
 			return 	$q->result_array();	
 
 		}
+		public function usr_report_project($project_id,$hourcount,$uname,
+		$project_unit_amount,$worklogproject,$shr,$project_unit_bh,$shr){
+
+				$r = $this->db->select("id")
+				  	->where("name", $uname)
+				  	->get("t_user");
+				$uid=$r->row_array(0);
+
+				$p =$this->db->select("id")
+				  	->where("name", $shr)
+				  	->get("t_user");
+				$shid=$p->row_array(0);
+				for($i=0;$i<count($project_unit_bh);$i++){
+					$q=$this->db->select("unitname,price,workunit,id")
+						->where("bh",$project_unit_bh[$i])
+						->get("t_project_workunit");
+					$unit_r=$q->row_array(0);
+					//insert begin
+					$data = array("project_id"=>$project_id,
+					              "hourcount"=>$hourcount,
+					              "logdate"=>gmdate("Y-m-d H:i:s", mktime() + 8 * 3600),
+					              "hourcount"=>$hourcount,
+					              "uname"=>$uname,
+					              "userid"=>$uid['id'],
+					              "projectsum"=>$project_unit_amount[$i],
+					              "worklogproject"=>$worklogproject,
+					              "sts"=>2,
+					              "unitname"=>$unit_r['unitname'],
+					              "price"=>$unit_r['price'],
+					              "je"=>$unit_r['price']*$project_unit_amount[$i],
+					              "shr"=>$shr,
+					              "shr_uid"=>$shid['id'],
+					              "bh"=>$project_unit_bh[$i],
+					              "workunit"=>$unit_r['workunit'],
+					              "workunitid"=>$unit_r['id']
+					              );
+					$this->db->insert("t_work_log_project", $data);
+
+				}		
+				return ;
+		}
 		public function AddProjectUser($project_code,$name) {
 			$p = $this->db->select("id")
 						  ->where("project_code", $project_code)
