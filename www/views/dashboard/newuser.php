@@ -48,10 +48,10 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                         <input type="checkbox" name="type1" value="1"> 普通员工
                         </label></td>
                         <td><label class="checkbox inline">
-                    <input type="checkbox" name="type2" value="2" >财务
+                    <input type="checkbox" name="type2" value="2" >中间人
                 </label></td>
                         <td><label class="checkbox inline">
-             <input type="checkbox" name="type3" value="4" >中间人
+             <input type="checkbox" name="type3" value="4" >财务
             </label></td>
                         <td><label class="checkbox inline">
              <input type="checkbox" name="type4" value="8" >老板

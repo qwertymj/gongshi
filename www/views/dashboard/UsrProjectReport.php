@@ -23,6 +23,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 		<div class="control-group">
 			<label class="control-label">项目代码:<?php echo $project_code;?></label>
                 <input type="hidden" name="project_id" value=<?php echo $project_id; ?> >
+                <input type="hidden" name="project_code" value=<?php echo $project_code; ?> >
+                
                 <input type="hidden" name="report_view" value="" >
 		</div>
  		<div class="control-group">

@@ -42,7 +42,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo $row['project_name'];            
             echo "</td><td>";
             if($row['sts']==1)
-                echo "项目待申报";
+                echo "项目可申报";
             else if($row['sts']==0)
                 echo "项目已被取消";
             echo "</td><td>";

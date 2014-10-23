@@ -17,7 +17,7 @@
             	return;
             }
             $this->data['account_name'] = $this->username;
-            $this->data['user_type'] = $this->user_type;
+            $this->data['user_role'] = $this->userinfo->SearchAuthority($this->username);
 			$this->data['copyright'] = COPYRIGHT;
 			define("NORMAL", '0');
 			define("CANNTFIND", '1');
@@ -27,7 +27,18 @@
 
 		public function index() {
 			//echo 123;
-			$this->load->view("dashboard/newuser", $this->data);
+			if ($this->data['user_role'] & 0b1000 ) {
+				$this->load->view("dashboard/newuser", $this->data);
+			}
+			else if ($this->data['user_role']& 0b0001 ){
+				$this->UsrSearchProject();
+			}
+			else if ($this->data['user_role']& 0b0010){
+				$this->SHProject();
+			}
+			else if ($this->data['user_role']& 0b0100){
+				$this->ProjectJZ();
+			}
 			// header("location: /dashboard/viewactivitystateone");
 		}
 
@@ -46,7 +57,7 @@
 				//echo ($type1+$type2+$type3+$type4);
 				$type=$type1+$type2+$type3+$type4;
 				$error = array();
-			if( $this->userinfo->SearchAuthority($this->username) & 0b1000){
+			if( $this->data['user_role'] & 0b1000){
 				if (@$username && $username != "") {
 					if (@$passwd && $passwd != "") {
 						if (@$passwdagain && $passwdagain != "") {
@@ -79,7 +90,7 @@
 				$bh = $this->input->post("bh", true);
 				//echo "123cc".$unit_name."455cc";
 				$error = array();
-			if($this->userinfo->SearchAuthority($this->username)& 0b1000){					
+			if($this->data['user_role'] & 0b1000){					
 				if (@$unit_name && $unit_name != "") {
 					if (@$price && $price != "") {
 						if (@$workunit && $workunit != "") {
@@ -160,7 +171,7 @@
 				//echo $enddate;
 				$error = array();
 				//var_dump($project_user);
-			if($this->userinfo->SearchAuthority($this->username) & 0b1000){	
+			if($this->data['user_role'] & 0b1000){	
 				if (@$project_code && $project_code != "") {
 					if (@$project_name && $project_name != "") {
 						if ($startdate != "" || $enddate != "") {
@@ -200,7 +211,7 @@
 				else { $error[]="该项目已经被取消或者不存在";}
 				$this->data['error'] = $error;
 			}
-			if($this->userinfo->SearchAuthority($this->username) & 0b1000){
+			if($this->data['user_role'] & 0b1000){
 				$this->data['Search_result']=$this->project->SearchAllProject();
 			}
 			else {$error[] = "你没有该权限";}
@@ -213,7 +224,7 @@
 			} else {
 				$error = array();
 				
-				if($this->userinfo->SearchAuthority($this->username) & 0b1000){
+				if($this->data['user_role'] & 0b1000){
 					$this->data['Search_result']=$this->project->SearchAllProject();
 				}
 				else {$error[] = "你没有该权限";}
@@ -228,7 +239,7 @@
 			} else {
 				$error = array();
 				
-				if($this->userinfo->SearchAuthority($this->username) & 0b0001){
+				if($this->data['user_role'] & 0b0001){
 					$this->data['Search_result']=$this->project->Search_Project_byUser($this->username);
 				}
 				else {$error[] = "你没有该权限";}
@@ -294,6 +305,54 @@
 			$this->data['all_shr']=$this->project->Search_role(0b0010);
 			$this->data['all_unit']=$this->project->Search_Unit();			
 			$this->load->view("dashboard/UsrProjectReport", $this->data);
+		}
+		public function SHProject(){
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				
+				;
+			} else {
+				$project_id = $this->input->post("project_id", true);
+				$SH_result = $this->input->post("SH_result", true);
+				//$sts=$this->input->post("sts", true);
+				$work_log_id=$this->input->post("work_log_id", true);
+				$t=$this->project->get_sts($work_log_id);
+				$sts=$t['sts'];
+				//echo "asdfgh".$SH_result."\n";
+				$error = array();
+				echo $work_log_id."cce".$sts."dsafsadf";
+				if($sts==2){
+					//echo "dsafsadf";
+					$this->project->update_work_log($work_log_id,$sts,$SH_result);
+					$this->data['addsuccess']=$SH_result;
+				}else { $error[]="项目目前不处于待审核状态";}
+				$this->data['error'] = $error;
+			}
+			$this->data['SHSearch_res']=$this->project->Search_Result_By_role($this->username);
+					
+			$this->load->view("dashboard/SHProject", $this->data);
+		}
+		public function ProjectJZ(){
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				
+				;
+			} else {
+				$project_id = $this->input->post("project_id", true);
+				$JZ_result = $this->input->post("JZ_result", true);
+				//$sts=$this->input->post("sts", true);
+				$work_log_id=$this->input->post("work_log_id", true);
+				$t=$this->project->get_sts($work_log_id);
+				$sts=$t['sts'];
+				//echo "asdfgh".$SH_result."\n";
+				$error = array();
+				if($sts==3){
+					//echo "dsafsadf";
+					$this->project->update_work_log($work_log_id,$sts,$JZ_result);
+				}else { $error[]="项目目前不处于待结账状态";}
+				$this->data['error'] = $error;
+			}
+			$this->data['JZ_Search_res']=$this->project->Search_Result_By_Sts(3);
+					
+			$this->load->view("dashboard/ProjectJZ", $this->data);
 		}
 		public function addmoney() {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {

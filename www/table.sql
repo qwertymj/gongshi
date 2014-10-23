@@ -49,6 +49,7 @@ CREATE TABLE t_project_workunit(
 CREATE TABLE t_work_log_project(
     work_log_id int PRIMARY KEY AUTO_INCREMENT,
     project_id int, # references `t_project`.`id` ok
+
     starttime date,
     endtime date,
     hourcount int, # 工作时长 ok
@@ -72,3 +73,4 @@ CREATE TABLE t_work_log_project(
 );
 
 insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1000);
+    

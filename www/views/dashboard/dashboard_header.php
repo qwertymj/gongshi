@@ -87,6 +87,7 @@
 				</li>
 				<li>
 				</li>
+				<?php if ($user_role & 0b1000 ) { ?>
 				<li class="">
 					<a href="/dashboard/newuser">
 					<i class="icon-cogs"></i>
@@ -110,59 +111,33 @@
 					<i class="icon-table"></i>
 					<span class="title">查看项目/添加项目员工</span>
 					</a>
-				</li>
+				</li> <? }
+				if ($user_role & 0b0001){
+				?>
 				<li class="">
 					<a href="/dashboard/UsrSearchProject">
 					<i class="icon-table"></i>
 					<span class="title">查看我的项目</span>
 					</a>
-				</li>
+				</li><? }
+				if ($user_role & 0b0010){
+				?>
 				<li class="">
-					<a href="javascript:;">
+					<a href="/dashboard/SHProject">
 					<i class="icon-table"></i>
-					<span class="title">挂失补办资金帐户</span>
-					<span class="arrow "></span>
+					<span class="title">审核我的项目</span>
 					</a>
-					<ul class="sub-menu">
-						<li >
-							<a href="/dashboard/cantfind">
-							<i class="icon-time"></i>
-							挂失</a>
-						</li>
-						<li >
-							<a href="/dashboard/atlastfind">
-							<i class="icon-cogs"></i>
-							解挂</a>
-						</li>
-						<li >
-							<a href="/dashboard/atlastnotfind">
-							<i class="icon-table"></i>
-							补办</a>
-						</li>
-					</ul>
+				</li><? }
+				if ($user_role & 0b0100){
+				?>
+				<li class="">
+					<a href="/dashboard/ProjectJZ">
+					<i class="icon-table"></i>
+					<span class="title">结账</span>
+					</a>
 				</li>
+				<?}?>
 
-				<!--edit by chenke-->
-				<li class="last ">
-					<a href="javascript:;">
-					<i class="icon-bar-chart"></i>
-					<span class="title">修改密码</span>
-					<span class="arrow "></span>
-					</a>
-					<ul class="sub-menu">
-						<li >
-							<a href="/dashboard/change_deal_psd">
-							<i class="icon-time"></i>
-							修改交易密码</a>
-						</li>
-						<li >
-							<a href="/dashboard/change_withdraw_psd">
-							<i class="icon-cogs"></i>
-							修改取款密码</a>
-						</li>
-					</ul>
-				</li>
-				<!--edit by chenke-->
 			</ul>
 		</div>
 		<!-- END SIDEBAR -->

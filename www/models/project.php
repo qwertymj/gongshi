@@ -93,6 +93,67 @@
 			return 	$q->result_array();	
 
 		}
+		public function Search_Result_By_Sts($sts){
+			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
+				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				from t_work_log_project as r join t_project as t
+				where r.sts = '".$sts."' and t.id=r.project_id";
+				// select t.project_code,t.project_name,t.sts
+				// r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				// from t_work_log_project as r join t_project as t
+				// where r.shr = "admin" and t.id=r.project_id;
+			$r = $this->db->query($q);
+			return 	$r->result_array();
+		}
+		
+		public function Search_Result_By_role($uname){
+			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
+				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				from t_work_log_project as r join t_project as t
+				where r.shr = '".$uname."' and t.id=r.project_id";
+				// select t.project_code,t.project_name,t.sts
+				// r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				// from t_work_log_project as r join t_project as t
+				// where r.shr = "admin" and t.id=r.project_id;
+			$r = $this->db->query($q);
+			return 	$r->result_array();
+		}
+		public function get_sts($work_log_id){
+			$p = $this->db->select("sts")
+						  ->where("work_log_id", $work_log_id)
+						  ->get("t_work_log_project");
+			return $p->row_array(0);	
+			//return 		
+		}
+		public function update_work_log($work_log_id,$sts,$result){
+			if($sts==2){
+				if($result==1){	
+					$update_sts=3;
+					$shcontent="审核通过";
+				}
+				else if($result==0){
+					$update_sts=0;
+					$shcontent="提交被拒绝";
+				}
+				$this->db->where("work_log_id", $work_log_id);
+				$this->db->set("sts", $update_sts);
+				$this->db->set("shcontent", $shcontent);
+				$this->db->update("t_work_log_project");
+
+			}
+			else if ($sts==3){
+				if($result==1){	
+					$update_sts=4;
+				}
+				else if($result==0){
+					$update_sts=0;
+				}
+				$this->db->where("work_log_id", $work_log_id);
+				$this->db->set("sts", $update_sts);
+				$this->db->update("t_work_log_project");
+			}
+			return ;
+		}
 		public function usr_report_project($project_id,$hourcount,$uname,
 		$project_unit_amount,$worklogproject,$shr,$project_unit_bh,$shr){
 
