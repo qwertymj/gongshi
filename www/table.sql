@@ -72,5 +72,5 @@ CREATE TABLE t_work_log_project(
     workunitid int # 对应t_project_workunit id
 );
 
-insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1000);
+insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1111);
     
