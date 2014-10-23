@@ -8,10 +8,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <?php
     if(@$addsuccess && $addsuccess)
     {
-        if($addsuccess==1){
+        if($addsuccess==2){
+            //echo "qeqweq";
             ?> <div class="alert alert-success">确认成功！</div> <?php
         }
-        else if($addsuccess==0){
+        if($addsuccess==1){
+            //echo "qeqweq1ewqeqw";
             ?> <div class="alert alert-success">拒绝成功！</div> <?php
         }
     }

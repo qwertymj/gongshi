@@ -104,8 +104,7 @@
 						} else { $error[] = "名称不能为空";}
 					} else {	$error[] = "单价不能为空"; }
 				} else 	{	$error[] = "单位名称不能为空";}
-			}
-			else {$error[] = "你没有该权限";}
+			}else {$error[] = "你没有该权限";}
 			$this->data['error'] = $error;
 			}
 			$this->load->view("dashboard/newunit", $this->data);
@@ -117,11 +116,15 @@
 				$project_code =$this->input->post("project_code", true);
 				$add_view =$this->input->post("add_view", true);
 				//echo $add_view."asdasfafadsf";
+				$error = array();
+
 				if(@$add_view && $add_view != ""){
 					;
 					//echo "1fafasdfasdf";
 				}
 				else{
+
+			if($this->data['user_role'] & 0b1000){
 					$error = array();
 					$project_user = array_filter(array_unique($this->input->post("project_user", true)));
 					//var_dump($project_user);
@@ -146,6 +149,7 @@
 						}
 						
 					} else { $error[] = "至少选择一名员工"; }
+					}else {$error[] = "你没有该权限";}
 					$this->data['error'] = $error;
 				}
 
@@ -204,17 +208,16 @@
 				$r=$r->row_array(0);
 				print_r($r);
 				//echo "cccchenejiweie";
-				if($r['sts']==1) {
-					$this->project->CancelProject_by_code($project_code);
-					$this->data['addsuccess']=true;
-				}
-				else { $error[]="该项目已经被取消或者不存在";}
+				if($this->data['user_role'] & 0b1000){
+					if($r['sts']==1) {
+						$this->project->CancelProject_by_code($project_code);
+						$this->data['addsuccess']=true;
+					}
+					else { $error[]="该项目已经被取消或者不存在";}
+				$this->data['Search_result']=$this->project->SearchAllProject();
+			} else {$error[] = "你没有该权限";}
 				$this->data['error'] = $error;
 			}
-			if($this->data['user_role'] & 0b1000){
-				$this->data['Search_result']=$this->project->SearchAllProject();
-			}
-			else {$error[] = "你没有该权限";}
 			$this->load->view("dashboard/BossSearchProject", $this->data);
 		}
 
@@ -257,21 +260,10 @@
 				$project_code =$this->input->post("project_code", true);
 				$project_id =$this->input->post("project_id", true);
 				$report_view =$this->input->post("report_view", true);
-				//$project_unit_name=$this->input->post("project_unit_name", true);
-				//$project_unit_price=$this->input->post("project_unit_price", true);
-				
-				//echo $add_view."asdasfafadsf";
-				//echo $report_view."   hahxidsfadfasf";
-				//var_dump($project_unit_name);
 				if(@$report_view && $report_view != ""){
 					;
-					//echo "1fafasdfasdf";
 				}
-				else{
-					//var_dump($project_unit_bh);//."   hahxidsfadfasf";
-					//foreach($project_unit_name as $u)
-					//	echo $u."   hahxidsfadfasf";
-					
+				else{				
 					$shr=$this->input->post("shr", true);
 					$hourcount=$this->input->post("hourcount", true);
 					$worklogproject=$this->input->post("worklogproject", true);
@@ -283,9 +275,6 @@
 					
 					if(@$project_unit_amount && $project_unit_amount!="")
 						$project_unit_amount=array_filter($project_unit_amount);
-
-					//var_dump($project_unit_bh);
-					//var_dump($project_unit_amount);
 					if(@$hourcount && $hourcount){
 						if(@$project_unit_bh && $project_unit_bh!=""){
 							if(count($project_unit_bh)==count($project_unit_amount)){
@@ -295,7 +284,6 @@
 							}else {$error[] = "所有申报材料的数量必须填写";}
 						}else {$error[] = "至少申报一项材料";}
 					}else {$error[] = "工作时长不能为空";}
-
 					
 				}
 				$this->data['project_code']=$project_code;
@@ -323,7 +311,8 @@
 				if($sts==2){
 					//echo "dsafsadf";
 					$this->project->update_work_log($work_log_id,$sts,$SH_result);
-					$this->data['addsuccess']=$SH_result;
+					$this->data['addsuccess']=$SH_result+1;
+					//var_dump($SH_result);
 				}else { $error[]="项目目前不处于待审核状态";}
 				$this->data['error'] = $error;
 			}
@@ -354,246 +343,8 @@
 					
 			$this->load->view("dashboard/ProjectJZ", $this->data);
 		}
-		public function addmoney() {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;
-			} else {
-				$error = array();
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdrawpass = $this->input->post("withdrawpass", true);
-				$withdrawmoney = $this->input->post("withdrawmoney", true);
-				$dealtype = $this->input->post("dealtype", true);
-				if ($moneyaccount && $withdrawpass && $withdrawmoney && $dealtype != "") {
-					if($this->moneyaccount->getState($moneyaccount)==NORMAL){
-						if ($this->moneyaccount->isMoneyAccountValid($moneyaccount, $withdrawpass)) {
-							$re = "操作成功";
-							if ($dealtype == "1") {
-								if (!$this->moneyaccount->addmoney($moneyaccount, $withdrawmoney))
-									$re = "增加存款失败";
-							} else {
-								if (!$this->moneyaccount->submoney($moneyaccount, $withdrawmoney)) {
-									$re = "取款失败";
-								}
-							}
-							$error[] = $re;
-						} else {
-							$error[] = "账户密码不匹配";
-	 					}
-	 				} else if($this->moneyaccount->getState($moneyaccount)==DEAD){
-	 					$error[] = "账户已被注销";
-	 				} else if($this->moneyaccount->getState($moneyaccount)==CANNTFIND){
-	 					$error[] = "账户挂失中";
-	 				}
-	 			} else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/money/changemoney", $this->data);
-		}
-
-		public function cantfind() {
-			$this->data['method'] = "cantfind";
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;
-			} else {
-				$error = array();
-				$nationalid = $this->input->post("nationalid", true);
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdrawpass = $this->input->post("withdrawpass", true);
-				if ($nationalid && $moneyaccount && $withdrawpass) {
-					if ($this->moneyaccount->isMoneyAccountValid($moneyaccount, $withdrawpass)) {
-						if ($this->stockaccount->isNationalIdValid($nationalid, $moneyaccount)) {
-							$this->moneyaccount->changeState($moneyaccount, CANNTFIND);
-							$this->data['state'] = "挂失中";
-						} else {
-							$error[] = "账户密码不匹配";
-						}
-					} else {
-						$error[] = "账户密码不匹配";
-	 				}
-	 			} else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/cantfind/cantfind", $this->data);
-		}
-
-		public function atlastfind() {
-			$this->data['method'] = "atlastfind";
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;
-			} else {
-				$error = array();
-				$nationalid = $this->input->post("nationalid", true);
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdrawpass = $this->input->post("withdrawpass", true);
-				if ($nationalid && $moneyaccount && $withdrawpass) {
-					if ($this->moneyaccount->isMoneyAccountValid($moneyaccount, $withdrawpass)) {
-						if ($this->stockaccount->isNationalIdValid($nationalid, $moneyaccount)) {
-							$this->moneyaccount->changeState($moneyaccount, NORMAL);
-							$this->data['state'] = "正常";
-						} else {
-							$error[] = "账户密码不匹配";
-						}
-					} else {
-						$error[] = "账户密码不匹配";
-	 				}
-	 			} else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/cantfind/cantfind", $this->data);
-		}
-
-		public function atlastnotfind() {
-			$this->data['method'] = "atlastnotfind";
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;
-			} else {
-				$error = array();
-				$nationalid = $this->input->post("nationalid", true);
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdrawpass = $this->input->post("withdrawpass", true);
-				if ($nationalid && $moneyaccount && $withdrawpass) {
-					if ($this->moneyaccount->isMoneyAccountValid($moneyaccount, $withdrawpass)) {
-						if ($this->stockaccount->isNationalIdValid($nationalid, $moneyaccount)) {
-							$this->moneyaccount->changeState($moneyaccount, DEAD);
-							$stock_detail = $this->stockaccount->getStockAccountId($moneyaccount);
-							$this->data['state'] = "死亡";
-							$this->data['stockaccount'] = $stock_detail['stockaccount'];
-							$thisp->data['inputpassword'] = true;
-							$this->data['nationalid'] = $nationalid;
-							$this->load->view("dashboard/useraccount/newuser", $this->data);
-							return;
-						} else {
-							$error[] = "账户身份证不匹配";
-						}
-					} else {
-						$error[] = "账户密码不匹配";
-	 				}
-	 			} else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/cantfind/cantfind", $this->data);
-		}
-
-		public function cancelaccount() {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;
-			} else {
-				$error = array();
-				$nationalid = $this->input->post("nationalid", true);
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdrawpass = $this->input->post("withdrawpass", true);
-				if ($moneyaccount && $withdrawpass) {
-					if ($this->moneyaccount->isMoneyAccountValid($moneyaccount, $withdrawpass)) {
-						if ($this->stockaccount->isNationalIdValid($nationalid, $moneyaccount)) {
-							if ($this->moneyaccount->getMoneyLeft($moneyaccount) > 0) {
-								$error[] = "请取完余额再进行操作";
-							} else {
-								$this->moneyaccount->changeState($moneyaccount, DEAD);
-								//$this->moneyaccount->delete_Moneyaccount($moneyaccount);
-								$this->data['success'] = true;
-							}
-						} else {
-							$error[] = "账户身份证不匹配";
-						}
-					} else {
-						$error[] = "账户密码不匹配";
-	 				}
-	 			} else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/destroy/cancelaccount", $this->data);
-		}
 
 
-
-		public function change_deal_psd($method = "") {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;// if ($method == "password")
-					// $this->data['inputpassword'] = true;
-			} else {
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$dealpasswdold = $this->input->post("passwdold", true);
-				$dealpasswdnew = $this->input->post("passwdnew", true);
-				$dealpassagain = $this->input->post("passwdnewagain", true);
-				$error = array();
-
-				if ($moneyaccount && $dealpasswdold && $dealpasswdnew && $dealpassagain) {
-					
-					 if ($this->moneyaccount->isdealMoneyAccountValid($moneyaccount,$dealpasswdold)){
-					 	
-						if($dealpasswdnew==$dealpassagain){
-							//to be continue
-							$this->moneyaccount->update_deal_passwd($moneyaccount,$dealpasswdnew);
-							$this->data['moneyaccount'] = $moneyaccount;
-							$this->data['inputpassword'] = true;
-							$this->data['success'] = true;
-						}
-						else{
-							$error[] = "两次输入交易密码不一样";
-						}
-
-					}
-					else{
-						$error[] = "账号密码不匹配";	
-					}
-				}
-				else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-			$this->load->view("dashboard/useraccount/change_deal_psd", $this->data);
-		}
-
-
-		public function change_withdraw_psd($method = "") {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;// if ($method == "password")
-					// $this->data['inputpassword'] = true;
-			} else {
-				$moneyaccount = $this->input->post("moneyaccount", true);
-				$withdraw_passwdold = $this->input->post("passwdold", true);
-				$withdraw_passwdnew = $this->input->post("passwdnew", true);
-				$withdraw_passagain = $this->input->post("passwdnewagain", true);
-				$error = array();
-
-				if ($moneyaccount && $withdraw_passwdold && $withdraw_passwdnew && $withdraw_passagain) {
-					
-					 if ($this->moneyaccount->isMoneyAccountValid($moneyaccount,$withdraw_passwdold)){
-						if($withdraw_passwdnew==$withdraw_passagain){
-							//to be continue
-							$this->moneyaccount->update_withdraw_passwd($moneyaccount,$withdraw_passwdnew);
-							$this->data['moneyaccount'] = $moneyaccount;
-							$this->data['inputpassword'] = true;
-							$this->data['success'] = true;
-						}
-						else{
-							$error[] = "两次输入取款密码不一样";
-						}
-
-					}
-					else{
-						$error[] = "账号密码不匹配";	
-					}
-				}
-				else {
-					$error[] = "所有都为必填项";
-	 			}
-				$this->data['error'] = $error;
-			}
-				
-			$this->load->view("dashboard/useraccount/change_withdraw_psd", $this->data);
-		}
 
 	}
 ?>
