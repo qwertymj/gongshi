@@ -238,7 +238,7 @@
 				;
 			} else {
 				$error = array();
-				
+				//echo "123cc";
 				if($this->data['user_role'] & 0b0001){
 					$this->data['Search_result']=$this->project->Search_Project_byUser($this->username);
 				}
@@ -284,8 +284,8 @@
 					if(@$project_unit_amount && $project_unit_amount!="")
 						$project_unit_amount=array_filter($project_unit_amount);
 
-					var_dump($project_unit_bh);
-					var_dump($project_unit_amount);
+					//var_dump($project_unit_bh);
+					//var_dump($project_unit_amount);
 					if(@$hourcount && $hourcount){
 						if(@$project_unit_bh && $project_unit_bh!=""){
 							if(count($project_unit_bh)==count($project_unit_amount)){

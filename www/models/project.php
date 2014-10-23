@@ -39,15 +39,22 @@
 			return ;
 		}
 		public function Search_Project_byUser($uname) {
-			$p = $this->db->select("project_id")
-							->where("uname",$uname)
-							->get("t_project_user");
-			$pid=$p->row_array(0);
-			if(!$pid)
-				return ;
-			$q = $this->db->select("id,project_code,project_name,startdate,enddate,sts,pcontent")
-						  ->where("id", $pid['project_id'])
-						  ->get("t_project");
+			$q=$this->db->query("select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
+					from t_project_user as t join t_project as r
+					where uname='".$uname."' and t.project_id = r.id;");
+			
+			// select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
+			// 		from t_project_user as t join t_project as r
+			// 		where uname='admin' and t.project_id = r.id;
+			// $p = $this->db->select("project_id")
+			// 				->where("uname",$uname)
+			// 				->get("t_project_user");
+			// $pid=$p->row_array(0);
+			// if(!$pid)
+			// 	return ;
+			// $q = $this->db->select("id,project_code,project_name,startdate,enddate,sts,pcontent")
+			// 			  ->where("id", $pid['project_id'])
+			// 			  ->get("t_project");
 					//	 echo '1231231';
 			//var_dump($q);
 			return $q->result_array();
