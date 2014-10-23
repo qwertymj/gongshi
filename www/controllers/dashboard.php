@@ -319,7 +319,7 @@
 				$sts=$t['sts'];
 				//echo "asdfgh".$SH_result."\n";
 				$error = array();
-				echo $work_log_id."cce".$sts."dsafsadf";
+				//echo $work_log_id."cce".$sts."dsafsadf";
 				if($sts==2){
 					//echo "dsafsadf";
 					$this->project->update_work_log($work_log_id,$sts,$SH_result);
