@@ -49,7 +49,6 @@ CREATE TABLE t_project_workunit(
 CREATE TABLE t_work_log_project(
     work_log_id int PRIMARY KEY AUTO_INCREMENT,
     project_id int, # references `t_project`.`id` ok
-
     starttime date,
     endtime date,
     hourcount int, # 工作时长 ok
@@ -59,7 +58,7 @@ CREATE TABLE t_work_log_project(
     projectsum int, # 数量 ok
     worklogproject varchar(200), # 备注 ok
     sts int, # 四个状态，上报，审核完成，退回，以结帐
-    unitname varchar(50), # 单位 
+    unitname varchar(40), # 单位 
     price float, # 单价 ok
     je float, # 金额 calcu
     shr varchar(50), # 审核人名字 ok
@@ -68,7 +67,7 @@ CREATE TABLE t_work_log_project(
     shcontent varchar(100), # 审核意见
     notes varchar(100), # 历史审核意见 delete
     bh varchar(40), # 编号
-    workunit varchar(40), # 对应t_project_workunit unitname
+    workunit varchar(40), # 对应t_project_workunit workunit
     workunitid int # 对应t_project_workunit id
 );
 
