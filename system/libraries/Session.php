@@ -1,5 +1,4 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**/
 /**
  * CodeIgniter
  *
@@ -303,6 +302,7 @@ class CI_Session {
 	 * @access	public
 	 * @return	void
 	 */
+	/** See create **/
 	function sess_create()
 	{
 		$sessid = '';
@@ -341,6 +341,7 @@ class CI_Session {
 	 * @access	public
 	 * @return	void
 	 */
+	/** See update **/
 	function sess_update()
 	{
 		// We only update the session every five minutes by default
@@ -429,6 +430,7 @@ class CI_Session {
 	 * @param	string
 	 * @return	string
 	 */
+	/** See userdate **/
 	function userdata($item)
 	{
 		return ( ! isset($this->userdata[$item])) ? FALSE : $this->userdata[$item];
