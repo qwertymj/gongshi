@@ -15,19 +15,26 @@
 				return true;
 			return false;
 		}
-		public function SearchAuthority($username) {
-			if (!$username)
+		public function SearchAuthority($name) {
+			if (!$name)
 				return false;
 			$q = $this->db->select("role")
-					      ->where("name", $username)
+					      ->where("name", $name)
 					      ->get("t_user");
 			$r=$q->row_array(0);
+			if(!$r) return false;
 			return $r['role'];
 		}
-		public function adduser($name, $password,$role) {
+		public function Search_role($role){
+			$q = $this->db->query("select name,username,job from t_user where role &".$role);
+			return $q->result_array();
+		}
+		public function adduser($name,$username,$password,$job,$type) {
 			$data = array("name"=>$name,
+						  "username"=>$username,
 			              "password"=>md5($password),
-						  "role"=>$role);
+			              "job"=>$job,
+						  "role"=>$type);
 			$this->db->insert("t_user", $data);
 			return ;
 		}
@@ -35,10 +42,12 @@
 			$q = $this->db->query("delete from t_user where name='".$name."'");
 			return ;
 		}
-		public function edituser($name,$passwd,$type) {
+		public function edituser($name,$new_username,$passwd,$job,$type) {
 			$this->db->where("name", $name);
 			$this->db->set("password",md5($passwd));
 			$this->db->set("role", $type);
+			$this->db->set("new_username", $new_username);
+			$this->db->set("job", $job);
 			$this->db->update("t_user");
 			return ;
 		}

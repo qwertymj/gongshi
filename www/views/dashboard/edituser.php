@@ -19,37 +19,17 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <?php } ?>
 
 	<form action="/dashboard/edituser" method='post'>
+        <div class="control-group">
+            <label class="control-label">员工账号:<?php echo $name;?></label>
+        </div>
+        <br>
+        <div class="control-group">
+            <label class="control-label">员工新姓名</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="new_username">
+            </div>
+        </div>
 
-
-<div class="control-group">
-
-    <label class="col-xs-10" >
-        <table class='table table-hover table-bordered' style="width:200px">
-                <thead>
-                    <tr><td>员工姓名</td></tr>
-                </thead>
-                <tbody id='all_user_table'>
-                <tr>
-                    <td>
-                        <!-- <input type='text' class='col-xs-2' name='project_user[]'/>  -->
-                        <select name="username" ><!-- onChange="changeData(this.value)"> -->
-                        <!-- <option selected="selected" >请选择员工</option> -->
-                        <?php 
-                            
-                            foreach($all_usr as $usr){
-                                echo "<option value='".$usr['name']."'>".$usr['name']."</option>";
-                                
-                            }
-
-                        ?>
-                        </select>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-        </label>
-</div>
 
 		<div class="control-group">
 			<label class="control-label">新密码</label>
@@ -64,8 +44,14 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 				<input type="password" class="span6 m-wrap" name="passwdagain">
 			</div>
 		</div>
+        <div class="control-group">
+            <label class="control-label">员工新岗位</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="job">
+            </div>
+        </div>
 		<div class="form-group">
-        <label for="" class="col-xs-2 control-label">员工种类</label>
+        <label for="" class="col-xs-2 control-label">员工权限</label>
         <label for="" class="col-xs-8">
             <table class="table table-hover col-xs-8">
                 <tbody>

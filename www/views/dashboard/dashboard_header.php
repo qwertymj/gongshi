@@ -88,7 +88,16 @@
 				<li>
 				</li>
 				<?php if ($user_role & 8 ) { ?>
+				
+
 				<li class="">
+					<a href="/dashboard/User_Maintain">
+					<i class="icon-table"></i>
+					<span class="title">员工维护</span>
+					</a>
+				</li>
+
+<!-- 				<li class="">
 					<a href="javascript:;">
 					<i class="icon-table"></i>
 					<span class="title">员工维护</span>
@@ -111,7 +120,7 @@
 							</a>
 						</li>
 					</ul>
-				</li>
+				</li> -->
 
 
 				<li class="">

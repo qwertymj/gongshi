@@ -4,6 +4,8 @@ use gongshi;
 CREATE TABLE t_user(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL, #
+    username varchar(100) not null,
+    job varchar(50) ,
     password VARCHAR(50) NOT NULL, # 
     sts int,        # 这个用户是否已经没取消，如果取消，不能登陆
     seq int,        # 用户排序顺序，暂时不需要考虑 
@@ -71,5 +73,5 @@ CREATE TABLE t_work_log_project(
     workunitid int # 对应t_project_workunit id
 );
 
-insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1111);
+insert into t_user (name,username,job,password,sts,seq,role) values ("admin","cc","boss",md5("admin"),0,0,0b1111);
     

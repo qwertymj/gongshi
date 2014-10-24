@@ -25,6 +25,8 @@
 				header("location: /dashboard");
 			}
 			else {
+				//echo "1".$this->input->ip_address()."<br>";
+				//echo "2".$this->session->userdata('ip_address');
 				$data['copyright'] = COPYRIGHT;
 				$this->load->view("login", $data);
 			}

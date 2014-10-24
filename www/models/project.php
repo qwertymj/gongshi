@@ -59,10 +59,7 @@
 			//var_dump($q);
 			return $q->result_array();
 		}
-		public function Search_role($role){
-			$q = $this->db->query("select name from t_user where role &".$role);
-			return $q->result_array();
-		}
+
 		//public function Search_user_not_boss()
 		public function SearchAllProject() {
 			$q = $this->db->select("project_code,project_name,startdate,enddate,sts,pcontent")
