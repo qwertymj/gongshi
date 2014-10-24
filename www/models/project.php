@@ -63,6 +63,7 @@
 			$q = $this->db->query("select name from t_user where role &".$role);
 			return $q->result_array();
 		}
+		//public function Search_user_not_boss()
 		public function SearchAllProject() {
 			$q = $this->db->select("project_code,project_name,startdate,enddate,sts,pcontent")
 						  ->get("t_project");
@@ -74,6 +75,28 @@
 						  ->get("t_project_workunit");
 
 			return $q->result_array();
+		}
+		public function EditWorkUnit($unit_name,$price,$workunit,$bh) {
+			$this->db->where("bh", $bh);
+			$this->db->set("unitname",$unit_name);
+			$this->db->set("price",$price);
+			$this->db->set("workunit",$workunit);
+			$this->db->update("t_project_workunit");
+			return ;
+		}
+		public function editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent) {
+			$this->db->where("project_code", $project_code);
+			$this->db->set("project_name",$project_name);
+			$this->db->set("sts",$sts);
+			$this->db->set("pcontent",$pcontent);
+			$this->db->set("startdate",$startdate);
+			$this->db->set("enddate",$enddate);
+			$this->db->update("t_project");
+			return ;
+		}
+		public function deleteunit($bh) {
+			$q = $this->db->query("delete from t_project_workunit where bh='".$bh."'");
+			return ;
 		}
 		public function SearchProject_by_code($project_code) {
 			$q = $this->db->select("sts")

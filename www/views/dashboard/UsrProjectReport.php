@@ -66,7 +66,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
-                    <tr><td style='width: 150px;'>编号</td><td style='width: 150px;'>名称</td><td style='width: 150px;'>单位</td><td style='width: 150px;'>单价</td><td style='width: 150px;'>数量</td><td></td></tr>
+                    <tr><td style='width: 150px;'>工时数据编号</td><td style='width: 150px;'>工时数据名称</td><td style='width: 150px;'>工时数据单位</td><td style='width: 150px;'>工时数据单价</td><td style='width: 150px;'>数量</td><td></td></tr>
                 </thead>
                 <tbody id='project_add_unit_table'>
                 <tr> 
@@ -76,10 +76,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                             echo "<option value='".$unit['bh']."'>".$unit['bh']."</option>";
                         }
                         ?>
+                    </select>
                     </td>
-                    <td><?echo $all_unit[0]['workunit']?></td>
-                    <td><?echo $all_unit[0]['unitname']?></td>
-                    <td><?echo $all_unit[0]['price']?></td>
+                    
+                    <td><?if(count($all_unit)>0) echo $all_unit[0]['workunit']?></td>
+                    <td><?if(count($all_unit)>0) echo $all_unit[0]['unitname']?></td>
+                    <td><?if(count($all_unit)>0) echo $all_unit[0]['price']?></td>
                     <td><input type='text' class='col-xs-2' style='width: 150px;' name='project_unit_amount[]'/></td>
                     <td><button type='button' class='close' aria-hidden='true' onclick='removeCloseMe(this)'>
                     &times;</button>

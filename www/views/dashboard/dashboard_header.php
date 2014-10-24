@@ -87,19 +87,64 @@
 				</li>
 				<li>
 				</li>
-				<?php if ($user_role & 0b1000 ) { ?>
+				<?php if ($user_role & 8 ) { ?>
 				<li class="">
-					<a href="/dashboard/newuser">
-					<i class="icon-cogs"></i>
-					<span class="title">新建员工</span>
+					<a href="javascript:;">
+					<i class="icon-table"></i>
+					<span class="title">员工维护</span>
+					<span class="arrow "></span>
 					</a>
+					<ul class="sub-menu">
+						<li >
+							<a href="/dashboard/newuser">
+							<i class="icon-time"></i>新建员工
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/deleteuser">
+							<i class="icon-cogs"></i>删除员工
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/edituser">
+							<i class="icon-table"></i>修改员工密码
+							</a>
+						</li>
+					</ul>
 				</li>
+
+
 				<li class="">
+					<a href="javascript:;">
+					<i class="icon-table"></i>
+					<span class="title">项目维护</span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+						<li >
+							<a href="/dashboard/newproject">
+							<i class="icon-time"></i>新建项目
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/BossSearchProject">
+							<i class="icon-cogs"></i>查看/删除项目
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/editproject">
+							<i class="icon-table"></i>修改项目
+							</a>
+						</li>
+					</ul>
+				</li>
+
+<!-- 				<li class="">
 					<a href="/dashboard/newproject">
 					<i class="icon-bookmark-empty"></i>
 					<span class="title">新建项目</span>
 					</a>
-				</li>
+				</li> 
 				<li class="">
 					<a href="/dashboard/newunit">
 					<i class="icon-briefcase"></i>
@@ -111,29 +156,56 @@
 					<i class="icon-table"></i>
 					<span class="title">查看项目/添加项目员工</span>
 					</a>
-				</li> <? }
-				if ($user_role & 0b0001){
+				</li> 
+			-->
+				<li class="">
+					<a href="javascript:;">
+					<i class="icon-table"></i>
+					<span class="title">工时数据项维护</span>
+					<span class="arrow "></span>
+					</a>
+					<ul class="sub-menu">
+						<li >
+							<a href="/dashboard/newunit">
+							<i class="icon-time"></i>新建工时数据
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/deleteunit">
+							<i class="icon-cogs"></i>删除工时数据
+							</a>
+						</li>
+						<li >
+							<a href="/dashboard/editunit">
+							<i class="icon-table"></i>工时数据修改
+							</a>
+						</li>
+					</ul>
+				</li>
+
+				<? }
+				if ($user_role & 1){
 				?>
 				<li class="">
 					<a href="/dashboard/UsrSearchProject">
 					<i class="icon-table"></i>
-					<span class="title">查看我的项目</span>
+					<span class="title">我的项目</span>
 					</a>
 				</li><? }
-				if ($user_role & 0b0010){
+				if ($user_role & 2){
 				?>
 				<li class="">
 					<a href="/dashboard/SHProject">
 					<i class="icon-table"></i>
-					<span class="title">审核我的项目</span>
+					<span class="title">工时报告审核</span>
 					</a>
 				</li><? }
-				if ($user_role & 0b0100){
+				if ($user_role & 4){
 				?>
 				<li class="">
 					<a href="/dashboard/ProjectJZ">
 					<i class="icon-table"></i>
-					<span class="title">结账</span>
+					<span class="title">工时报告结账</span>
 					</a>
 				</li>
 				<?}?>

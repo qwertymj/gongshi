@@ -27,16 +27,16 @@
 
 		public function index() {
 			//echo 123;
-			if ($this->data['user_role'] & 0b1000 ) {
+			if ($this->data['user_role'] & 8 ) {
 				$this->load->view("dashboard/newuser", $this->data);
 			}
-			else if ($this->data['user_role']& 0b0001 ){
+			else if ($this->data['user_role']& 1 ){
 				$this->UsrSearchProject();
 			}
-			else if ($this->data['user_role']& 0b0010){
+			else if ($this->data['user_role']& 2){
 				$this->SHProject();
 			}
-			else if ($this->data['user_role']& 0b0100){
+			else if ($this->data['user_role']& 4){
 				$this->ProjectJZ();
 			}
 			// header("location: /dashboard/viewactivitystateone");
@@ -57,7 +57,7 @@
 				//echo ($type1+$type2+$type3+$type4);
 				$type=$type1+$type2+$type3+$type4;
 				$error = array();
-			if( $this->data['user_role'] & 0b1000){
+			if( $this->data['user_role'] & 8){
 				if (@$username && $username != "") {
 					if (@$passwd && $passwd != "") {
 						if (@$passwdagain && $passwdagain != "") {
@@ -77,8 +77,91 @@
 			}
 			$this->load->view("dashboard/newuser", $this->data);
 		}
+		public function edituser($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+				$username = $this->input->post("username", true);
+				$passwd = $this->input->post("passwd", true);
+				$passwdagain = $this->input->post("passwdagain", true);
+				$type1 = $this->input->post("type1", true);
+				$type2 = $this->input->post("type2", true);
+				$type3 = $this->input->post("type3", true);
+				$type4 = $this->input->post("type4", true);
+				//echo ($type1+$type2+$type3+$type4);
+				$type=$type1+$type2+$type3+$type4;
+				$error = array();
+			if( $this->data['user_role'] & 8){
+				if (@$username && $username != "") {
+					if (@$passwd && $passwd != "") {
+						if (@$passwdagain && $passwdagain != "") {
+							if ($passwd==$passwdagain)  {
+								if (@$type && $type != "") {
+									
+									$this->userinfo->edituser($username,$passwd,$type);
+									$this->data['success']=true;
+								} else { $error[] = "未选择员工类型"; }
+							} else { $error[] = "两次密码输入不一致";}
+						} else { $error[] = "请再次输入密码";}
+					} else {	$error[] = "密码不为空"; }
+				} else 	{	$error[] = "用户名不为空";}
+			}
+			else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+			$this->data['all_usr']=$this->project->Search_role(0b0111);
+			$this->load->view("dashboard/edituser", $this->data);
+		}
+		public function deleteuser($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+				$username = $this->input->post("username", true);
+				$error = array();
+			if( $this->data['user_role'] & 8){
+				if (@$username && $username != "") {
+					if(	$this->userinfo->SearchAuthority($username)){
+						$this->userinfo->deleteuser($username);
+						$this->data['success']=true;
+					}
+					else {$error[]= "该用户已被删除";}
 
+				} else 	{	$error[] = "请选择要删除的用户";}
+			}
+			else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+			$this->data['all_usr']=$this->project->Search_role(0b0111);
+			$this->load->view("dashboard/deleteuser", $this->data);
+		}
+		public function deleteunit($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
 
+				$bh = $this->input->post("unit_bh", true);
+				//echo "123cc".$unit_name."455cc";
+				$error = array();
+			if($this->data['user_role'] & 8){					
+
+				if (@$bh && $bh != "")  {
+					if ($this->project->isBhExist($bh)) {
+									
+						$this->project->deleteunit($bh);
+						$this->data['success']=true;
+					} else { $error[] = "该编号已经被删除或者不存在"; }
+				} else { $error[] = "编号不能为空";}
+
+			}else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+			$this->data['all_unit']=$this->project->Search_Unit();	
+
+			$this->load->view("dashboard/deleteunit", $this->data);
+		}
 		public function newunit($method = "") {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
 				;// if ($method == "password")
@@ -90,7 +173,7 @@
 				$bh = $this->input->post("bh", true);
 				//echo "123cc".$unit_name."455cc";
 				$error = array();
-			if($this->data['user_role'] & 0b1000){					
+			if($this->data['user_role'] & 8){					
 				if (@$unit_name && $unit_name != "") {
 					if (@$price && $price != "") {
 						if (@$workunit && $workunit != "") {
@@ -109,6 +192,76 @@
 			}
 			$this->load->view("dashboard/newunit", $this->data);
 		}
+		public function editproject($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;
+				// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+				$project_code = $this->input->post("project_code", true);
+				$project_name = $this->input->post("project_name", true);
+				$pcontent = $this->input->post("pcontent", true);
+				//$project_user = array_filter(array_unique($this->input->post("project_user", true)));
+				$startdate = $this->input->post("startdate", true);
+				$enddate = $this->input->post("enddate", true);
+				$sts = $this->input->post("sts", true);
+				//echo $startdate;
+				//echo $enddate;
+				$error = array();
+				//var_dump($project_user);
+			if($this->data['user_role'] & 8){	
+			
+				if (@$project_name && $project_name != "") {
+					if ($startdate != "" || $enddate != "") {						
+							if($this->project->isProjectCodeValid($project_code)){
+								$this->project->editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent);
+
+								$this->data['success']=true;
+							}else { $error[] = "该项目代码不存在！"; }						
+					} else  {	$error[] = "起止日期不能为空"; }			
+				} else {	$error[] = "项目名称不能为空"; }
+				
+			}
+			else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+			//$this->data['all_usr']=$this->project->Search_role(1);
+			$this->data['all_project']=$this->project->SearchAllProject();
+			$this->load->view("dashboard/editproject", $this->data);
+		}
+		public function editunit($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+				$bh = $this->input->post("unit_bh", true);
+				$unit_name = $this->input->post("unit_name", true);
+				$price = $this->input->post("price", true);
+				$workunit = $this->input->post("workunit", true);
+
+				//echo "123cc".$unit_name."455cc";
+				$error = array();
+			if($this->data['user_role'] & 8){					
+				if (@$unit_name && $unit_name != "") {
+					if (@$price && $price != "") {
+						if (@$workunit && $workunit != "") {
+							if (@$bh && $bh != "")  {
+								if ($this->project->isBhExist($bh)) {
+									
+									$this->project->EditWorkUnit($unit_name,$price,$workunit,$bh);
+									$this->data['success']=true;
+								} else { $error[] = "该编号不存在"; }
+							} else { $error[] = "编号不能为空";}
+						} else { $error[] = "名称不能为空";}
+					} else {	$error[] = "单价不能为空"; }
+				} else 	{	$error[] = "单位名称不能为空";}
+			}else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+
+			$this->data['all_unit']=$this->project->Search_Unit();	
+			$this->load->view("dashboard/editunit", $this->data);
+		}
 		public function project_addusr() {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
 				;
@@ -124,7 +277,7 @@
 				}
 				else{
 
-			if($this->data['user_role'] & 0b1000){
+			if($this->data['user_role'] & 8){
 					$error = array();
 					$project_user = array_filter(array_unique($this->input->post("project_user", true)));
 					//var_dump($project_user);
@@ -139,7 +292,7 @@
 								// echo "strcmp".strcmp($each_usr['uname'],$each_add_user[0])."\n\n";
 								if(strcmp($each_usr['uname'],$each_add_user)==0){
 									//echo "fuck!";
-									$this->data['addsuccess']=false;
+									$this->data['success']=false;
 									$error[] = $each_usr['uname']."已经存在于这个项目中，其余员工添加成功";
 									$flag=0;
 								}
@@ -155,7 +308,7 @@
 
 				$this->data['project_code']=$project_code;
 			}
-			$this->data['all_usr']=$this->project->Search_role(0b0001);
+			$this->data['all_usr']=$this->project->Search_role(1);
 			$this->load->view("dashboard/project_addusr", $this->data);
 		}
 
@@ -175,7 +328,7 @@
 				//echo $enddate;
 				$error = array();
 				//var_dump($project_user);
-			if($this->data['user_role'] & 0b1000){	
+			if($this->data['user_role'] & 8){	
 				if (@$project_code && $project_code != "") {
 					if (@$project_name && $project_name != "") {
 						if ($startdate != "" || $enddate != "") {
@@ -195,7 +348,7 @@
 			else {$error[] = "你没有该权限";}
 			$this->data['error'] = $error;
 			}
-			$this->data['all_usr']=$this->project->Search_role(0b0001);
+			$this->data['all_usr']=$this->project->Search_role(1);
 			$this->load->view("dashboard/newproject", $this->data);
 		}
 		public function project_cancel() {
@@ -206,12 +359,12 @@
 				$project_code = $this->input->post("project_code", true);
 				$r=$this->project->SearchProject_by_code($project_code);
 				$r=$r->row_array(0);
-				print_r($r);
+				//print_r($r);
 				//echo "cccchenejiweie";
-				if($this->data['user_role'] & 0b1000){
+				if($this->data['user_role'] & 8){
 					if($r['sts']==1) {
 						$this->project->CancelProject_by_code($project_code);
-						$this->data['addsuccess']=true;
+						$this->data['success']=true;
 					}
 					else { $error[]="该项目已经被取消或者不存在";}
 				$this->data['Search_result']=$this->project->SearchAllProject();
@@ -227,7 +380,7 @@
 			} else {
 				$error = array();
 				
-				if($this->data['user_role'] & 0b1000){
+				if($this->data['user_role'] & 8){
 					$this->data['Search_result']=$this->project->SearchAllProject();
 				}
 				else {$error[] = "你没有该权限";}
@@ -242,7 +395,7 @@
 			} else {
 				$error = array();
 				//echo "123cc";
-				if($this->data['user_role'] & 0b0001){
+				if($this->data['user_role'] & 1){
 					$this->data['Search_result']=$this->project->Search_Project_byUser($this->username);
 				}
 				else {$error[] = "你没有该权限";}
@@ -290,7 +443,7 @@
 				$this->data['project_id']=$project_id;
 			}
 			$this->data['error'] = $error;
-			$this->data['all_shr']=$this->project->Search_role(0b0010);
+			$this->data['all_shr']=$this->project->Search_role(2);
 			$this->data['all_unit']=$this->project->Search_Unit();			
 			$this->load->view("dashboard/UsrProjectReport", $this->data);
 		}

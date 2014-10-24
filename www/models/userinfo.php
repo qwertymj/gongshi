@@ -31,5 +31,16 @@
 			$this->db->insert("t_user", $data);
 			return ;
 		}
+		public function deleteuser($name) {
+			$q = $this->db->query("delete from t_user where name='".$name."'");
+			return ;
+		}
+		public function edituser($name,$passwd,$type) {
+			$this->db->where("name", $name);
+			$this->db->set("password",md5($passwd));
+			$this->db->set("role", $type);
+			$this->db->update("t_user");
+			return ;
+		}
 	}
 ?>

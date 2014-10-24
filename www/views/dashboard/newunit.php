@@ -20,20 +20,20 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 	<form action="/dashboard/newunit" method='post'>
 		<div class="control-group">
-			<label class="control-label">单位名称</label>
+			<label class="control-label">工时数据单位名</label>
 			<div class="controls">
 				<input type="text" class="span6 m-wrap" name="unit_name">
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">单价</label>
+			<label class="control-label">工时数据单价</label>
 			<div class="controls">
 				<input type="text" class="span6 m-wrap" name="price">
 			</div>
 		</div>
 
 		<div class="control-group">
-			<label class="control-label">名称</label>
+			<label class="control-label">工时数据名称</label>
 			<div class="controls">
 				<input type="text" class="span6 m-wrap" name="workunit">
 			</div>

@@ -20,7 +20,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 
 
-<div class="form-group">
+<div class="control-group">
     
     <label class="col-xs-2 control-label" >我的项目
     </label>
