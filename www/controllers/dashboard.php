@@ -210,7 +210,7 @@
 				$error = array();
 				//var_dump($project_user);
 			if($this->data['user_role'] & 8){	
-			
+			if (@$project_code && $project_code != "") {
 				if (@$project_name && $project_name != "") {
 					if ($startdate != "" || $enddate != "") {						
 							if($this->project->isProjectCodeValid($project_code)){
@@ -220,7 +220,7 @@
 							}else { $error[] = "该项目代码不存在！"; }						
 					} else  {	$error[] = "起止日期不能为空"; }			
 				} else {	$error[] = "项目名称不能为空"; }
-				
+			} else {	$error[] = "项目代码不能为空"; }
 			}
 			else {$error[] = "你没有该权限";}
 			$this->data['error'] = $error;
