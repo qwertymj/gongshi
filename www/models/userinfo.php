@@ -25,6 +25,13 @@
 			if(!$r) return false;
 			return $r['role'];
 		}
+		public function Search_user($name){
+			$q = $this->db->select("name,username,job,password,role")
+					      ->where("name", $name)
+					      ->get("t_user");
+			$r=$q->row_array(0);
+			return $r;
+		}
 		public function Search_role($role){
 			$q = $this->db->query("select name,username,job from t_user where role &".$role);
 			return $q->result_array();
@@ -42,12 +49,17 @@
 			$q = $this->db->query("delete from t_user where name='".$name."'");
 			return ;
 		}
-		public function edituser($name,$new_username,$passwd,$job,$type) {
+		public function edituser($name,$new_username,$job,$type) {
 			$this->db->where("name", $name);
-			$this->db->set("password",md5($passwd));
 			$this->db->set("role", $type);
-			$this->db->set("new_username", $new_username);
+			$this->db->set("username", $new_username);
 			$this->db->set("job", $job);
+			$this->db->update("t_user");
+			return ;
+		}
+		public function edituserpsd($name,$password) {
+			$this->db->where("name", $name);
+			$this->db->set("password", md5($password));
 			$this->db->update("t_user");
 			return ;
 		}

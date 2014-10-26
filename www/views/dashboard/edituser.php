@@ -20,34 +20,25 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 	<form action="/dashboard/edituser" method='post'>
         <div class="control-group">
-            <label class="control-label">员工账号:<?php echo $name;?></label>
+            <label class="control-label" >员工账号:<?php echo $userinfo['name'];?></label>
         </div>
         <br>
         <div class="control-group">
-            <label class="control-label">员工新姓名</label>
+            <label class="control-label">员工姓名</label>
             <div class="controls">
-                <input type="text" class="span6 m-wrap" name="new_username">
+                <input type="text" class="span6 m-wrap" name="new_username" value=<?php echo $userinfo['username'];?> >
+            </div>
+            <div class="controls">
+                <input type="hidden" class="span6 m-wrap" name="name" value=<?php echo $userinfo['name'];?> >
             </div>
         </div>
 
 
-		<div class="control-group">
-			<label class="control-label">新密码</label>
-			<div class="controls">
-				<input type="password" class="span6 m-wrap" name="passwd">
-			</div>
-		</div>
 
-		<div class="control-group">
-			<label class="control-label">再次输入新密码</label>
-			<div class="controls">
-				<input type="password" class="span6 m-wrap" name="passwdagain">
-			</div>
-		</div>
         <div class="control-group">
-            <label class="control-label">员工新岗位</label>
+            <label class="control-label">员工岗位</label>
             <div class="controls">
-                <input type="text" class="span6 m-wrap" name="job">
+                <input type="text" class="span6 m-wrap" name="job" value=<?php echo $userinfo['job'];?>>
             </div>
         </div>
 		<div class="form-group">
@@ -56,18 +47,30 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             <table class="table table-hover col-xs-8">
                 <tbody>
                     <tr>
-                        <td><label class="checkbox inline">
-                        <input type="checkbox" name="type1" value="1"> 普通员工
-                        </label></td>
-                        <td><label class="checkbox inline">
-                    <input type="checkbox" name="type2" value="2" >中间人
-                </label></td>
-                        <td><label class="checkbox inline">
-             <input type="checkbox" name="type3" value="4" >财务
-            </label></td>
-                        <td><label class="checkbox inline">
-             <input type="checkbox" name="type4" value="8" >老板
-            </label></td>
+                        <td>
+                            <label class="checkbox inline">
+                            <input type="checkbox" name="type1" value="1"
+                            <?if($userinfo['role']&1) echo "checked=true";?>
+                            >普通员工
+                            </label></td>
+                        <td>
+                            <label class="checkbox inline">
+                            <input type="checkbox" name="type2" value="2" 
+                            <?if($userinfo['role']&2) echo "checked=true";?>
+                            >中间人
+                            </label></td>
+                        <td>
+                            <label class="checkbox inline">
+                            <input type="checkbox" name="type3" value="4" 
+                            <?if($userinfo['role']&4) echo "checked=true";?>
+                            >财务
+                            </label></td>
+                        <td>
+                            <label class="checkbox inline">
+                             <input type="checkbox" name="type4" value="8" 
+                            <?if($userinfo['role']&8) echo "checked=true";?>
+                             >老板
+                            </label></td>
                     </tr>
     
                 </tbody>

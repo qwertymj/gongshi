@@ -18,36 +18,33 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         </div>
     <?php } ?>
 
-	<form action="/dashboard/editunit" method='post'>
-
-
-<div class="control-group">
-    
-
+	<form action="/dashboard/edituserpsd" method='post'>
         <div class="control-group">
-            <label class="control-label" >工时数据编号:<?php echo $unit_info['bh'];?></label>
+            <label class="control-label" >员工账号:<?php echo $name;?></label>
         </div>
         <div class="control-group">
-            <label class="control-label">工时数据名称</label>
-            <div class="controls">
-                <input type="text" class="span6 m-wrap" name="workunit" value=<?php echo $unit_info['workunit'];?>>
-            </div>
+            <input type="hidden" name="name" value=<?php echo $name; ?> >
         </div>
-        <div class="control-group">
-            <label class="control-label">工时数据单位</label>
+        <br>
+
+
+       <div class="control-group">
+            <label class="control-label">新密码</label>
             <div class="controls">
-                <input type="text" class="span6 m-wrap" name="unit_name" value=<?php echo $unit_info['unitname'];?>>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">工时数据单价</label>
-            <div class="controls">
-                <input type="text" class="span6 m-wrap" name="price" value=<?php echo $unit_info['price'];?>>
+                <input type="password" class="span6 m-wrap" name="passwd" >
             </div>
         </div>
 
+        <div class="control-group">
+            <label class="control-label">再次输入新密码</label>
+            <div class="controls">
+                <input type="password" class="span6 m-wrap" name="passwdagain" >
+            </div>
+        </div> 
 
 
+
+  </div>
 		<button type="submit" class='btn blue'>确认修改</button>
 	</form>
 

@@ -20,13 +20,7 @@
 			return ;
 		}
 
-		public function isProjectCodeValid($project_code) {
-			$q = $this->db->select("project_code")
-						  ->where("project_code", $project_code)
-						 // ->where("accountId", $stockaccount)
-						  ->get("t_project");
-			return $q->num_rows() > 0;
-		}
+
 
 		public function AddProject($project_code, $project_name,$startdate,$enddate,$pcontent) {
 			$data = array("project_code"=>$project_code,
@@ -41,25 +35,17 @@
 		public function Search_Project_byUser($uname) {
 			$q=$this->db->query("select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
 					from t_project_user as t join t_project as r
-					where uname='".$uname."' and t.project_id = r.id;");
-			
-			// select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
-			// 		from t_project_user as t join t_project as r
-			// 		where uname='admin' and t.project_id = r.id;
-			// $p = $this->db->select("project_id")
-			// 				->where("uname",$uname)
-			// 				->get("t_project_user");
-			// $pid=$p->row_array(0);
-			// if(!$pid)
-			// 	return ;
-			// $q = $this->db->select("id,project_code,project_name,startdate,enddate,sts,pcontent")
-			// 			  ->where("id", $pid['project_id'])
-			// 			  ->get("t_project");
-					//	 echo '1231231';
-			//var_dump($q);
+					where t.uname='".$uname."' and t.project_id = r.id;");
 			return $q->result_array();
 		}
 
+		/////////
+		public function Search_Work_byUser($uname) {
+			$q=$this->db->query("select r.project_code,r.project_name,t.logdate,t.sts,t.shcontent
+					from t_work_log_project as t join t_project as r
+					where t.uname='".$uname."' and t.project_id = r.id;");
+			return $q->result_array();
+		}
 		//public function Search_user_not_boss()
 		public function SearchAllProject() {
 			$q = $this->db->select("project_code,project_name,startdate,enddate,sts,pcontent")
@@ -72,6 +58,14 @@
 						  ->get("t_project_workunit");
 
 			return $q->result_array();
+		}
+		public function Search_Unit_by_Bh($bh) {
+			$q = $this->db->select("unitname,price,workunit,bh")
+						  ->where("bh",$bh)
+						  ->get("t_project_workunit");
+
+			$r=$q->row_array(0);
+			return $r  ;
 		}
 		public function EditWorkUnit($unit_name,$price,$workunit,$bh) {
 			$this->db->where("bh", $bh);
@@ -91,17 +85,24 @@
 			$this->db->update("t_project");
 			return ;
 		}
+
 		public function deleteunit($bh) {
 			$q = $this->db->query("delete from t_project_workunit where bh='".$bh."'");
 			return ;
 		}
+		public function deleteproject($project_code) {
+			$q = $this->db->query("delete from t_project where project_code='".$project_code."'");
+			return ;
+		}
+		
 		public function SearchProject_by_code($project_code) {
-			$q = $this->db->select("sts")
+			$q = $this->db->select("project_code,project_name,sts,pcontent,startdate,enddate")
 						  ->where("project_code", $project_code)
 						  ->get("t_project");
 					//	 echo '1231231';
 			//var_dump($q);
-			return $q  ;
+			$r=$q->row_array(0);
+			return $r  ;
 		}
 		public function CancelProject_by_code($project_code) {
 			$this->db->where("project_code", $project_code);
@@ -120,7 +121,7 @@
 			return 	$q->result_array();	
 
 		}
-		public function Search_Result_By_Sts($sts){
+		public function Search_JZResult_By_Sts($sts){
 			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
 				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
 				from t_work_log_project as r join t_project as t
@@ -133,7 +134,7 @@
 			return 	$r->result_array();
 		}
 		
-		public function Search_Result_By_role($uname){
+		public function Search_SHResult_By_role($uname){
 			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
 				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
 				from t_work_log_project as r join t_project as t
@@ -184,15 +185,15 @@
 		public function usr_report_project($project_id,$hourcount,$uname,
 		$project_unit_amount,$worklogproject,$shr,$project_unit_bh,$shr){
 
-				$r = $this->db->select("id")
+				$r = $this->db->select("username")
 				  	->where("name", $uname)
 				  	->get("t_user");
-				$uid=$r->row_array(0);
+				$usrname=$r->row_array(0);
 
-				$p =$this->db->select("id")
+				$p =$this->db->select("username")
 				  	->where("name", $shr)
 				  	->get("t_user");
-				$shid=$p->row_array(0);
+				$shname=$p->row_array(0);
 				for($i=0;$i<count($project_unit_bh);$i++){
 					$q=$this->db->select("unitname,price,workunit,id")
 						->where("bh",$project_unit_bh[$i])
@@ -204,7 +205,7 @@
 					              "logdate"=>gmdate("Y-m-d H:i:s", mktime() + 8 * 3600),
 					              "hourcount"=>$hourcount,
 					              "uname"=>$uname,
-					              "userid"=>$uid['id'],
+					              "username"=>$usrname['username'],
 					              "projectsum"=>$project_unit_amount[$i],
 					              "worklogproject"=>$worklogproject,
 					              "sts"=>2,
@@ -212,7 +213,7 @@
 					              "price"=>$unit_r['price'],
 					              "je"=>$unit_r['price']*$project_unit_amount[$i],
 					              "shr"=>$shr,
-					              "shr_uid"=>$shid['id'],
+					              "shrname"=>$shname['username'],
 					              "bh"=>$project_unit_bh[$i],
 					              "workunit"=>$unit_r['workunit'],
 					              "workunitid"=>$unit_r['id']

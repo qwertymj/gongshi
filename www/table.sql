@@ -4,7 +4,7 @@ use gongshi;
 CREATE TABLE t_user(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL, #
-    username varchar(100) not null,
+    username varchar(100) NOT NULL,
     job varchar(50) ,
     password VARCHAR(50) NOT NULL, # 
     sts int,        # 这个用户是否已经没取消，如果取消，不能登陆
@@ -56,22 +56,27 @@ CREATE TABLE t_work_log_project(
     hourcount int, # 工作时长 ok
     logdate date, # 登记时间 
     uname varchar(50), # 报告人名字 ok
-    userid int, # 报告人id ok
+    username varchar(100), # 报告人id ok
     projectsum int, # 数量 ok
     worklogproject varchar(200), # 备注 ok
     sts int, # 四个状态，上报，审核完成，退回，以结帐
-    unitname varchar(40), # 单位 
+    unitname varchar(50), # 单位 
     price float, # 单价 ok
     je float, # 金额 calcu
     shr varchar(50), # 审核人名字 ok
-    shr_uid int, # 审核人id
+    shrname int, # 审核人名字
     shdate date, # 审核日期
     shcontent varchar(100), # 审核意见
     notes varchar(100), # 历史审核意见 delete
     bh varchar(40), # 编号
-    workunit varchar(40), # 对应t_project_workunit workunit
+    workunit varchar(40), # 对应t_project_workunit unitname
     workunitid int # 对应t_project_workunit id
 );
 
-insert into t_user (name,username,job,password,sts,seq,role) values ("admin","cc","boss",md5("admin"),0,0,0b1111);
-    
+CREATE TABLE t_login_log(
+    id int PRIMARY KEY AUTO_INCREMENT,  #logid
+    uname varchar(50), # 登录者uname
+    login_datetime datetime,#登录时间
+    login_ip varchar(50)
+);
+insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1000);

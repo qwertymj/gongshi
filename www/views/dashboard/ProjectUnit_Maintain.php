@@ -20,69 +20,57 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 
 
-<div class="control-group">
+<div class="form-group">
     
-    <label class="col-xs-2 control-label" > <font size="4">员工列表</font>
-            <form action="/dashboard/newuser" class="pull-right" method='get'>
-                <button type="submit" class="btn" >新建员工</button>
+    <label class="col-xs-2 control-label" >所有工时数据
+            <form action="/dashboard/newunit" class="pull-right" method='get'>
+                <button type="submit" class="btn" >新建工时数据</button>
             </form>
     </label>
-
-
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
-                    <tr><td>员工账号</td><td>员工姓名</td><td>岗位</td><td></td><td></td><td></td></tr>
+                    <tr><td>工时数据编号</td><td>工时数据名称</td><td>工时数据单位</td><td>工时数据单价</td><td></td><td></td></tr>
                 </thead>
                 <tbody >
     <?php
     //var_dump($Search_result);
-    if(@$all_usr && $all_usr)
+    if(@$all_unit && $all_unit)
     {
         //project_code,project_name,startdate,enddate,sts,pcontent
-        foreach($all_usr as $row){
+        foreach($all_unit as $row){
             echo "<tr> <td>";
-            echo $row['name'];
+            echo $row['bh'];
             echo "</td><td>"; 
-            echo $row['username'];            
+            echo $row['workunit'];            
+
             echo "</td><td>";
-            echo $row['job'];
-            echo "</td><td>";?>
-
-           
-           <form action="/dashboard/edituser" method='get'>
-                <input type="hidden" name="name" value=<?php echo $row['name']; ?> >
-
+            echo $row['unitname'];
+            echo "</td><td>";
+            echo $row['price'];
+            echo "</td><td>";
+?>
+            <form action="/dashboard/editunit" method='get'>
+                <input type="hidden" name="unit_bh" value=<?php echo $row["bh"]; ?> >
                 <div align="center">
-
-                    <button type="submit" class="btn" >修改员工信息</button>
+                    <button type="submit" class="btn" >工时数据修改</button>
                 </div>
             </form>
-            </td><td>
-           <form action="/dashboard/edituserpsd" method='get'>
-                <input type="hidden" name="name" value=<?php echo $row['name']; ?> >
+            
 
+            </td><td>
+
+            <form action="/dashboard/deleteunit" method='post'>
+                <input type="hidden" name="unit_bh" value=<?php echo $row["bh"]; ?> >
                 <div align="center">
 
-                    <button type="submit" class="btn" >修改员工密码</button>
-                </div>
-            </form>
-            </td><td>
-            <form action="/dashboard/deleteuser" method='post'>
-                <input type="hidden" name="name" value=<?php echo $row["name"]; ?> >
-
-                <div align="center">
-
-                    <button type="submit" class="btn" onclick="show_confirm(this)" 
-                    value=<?echo $row["name"];?>>
-                    删除
-                    </button>
+                    <button type="submit" class="btn" onclick="show_confirm(this)"  value=<?php echo $row["bh"]; ?>>删除该工时数据</button>
                 </div>
                 <script type="text/javascript">
                     function show_confirm(t)
                     {
 
-                        var msg='确认删除'+$(t).val()+'吗';
+                        var msg='确认删除工时数据'+$(t).val()+'吗';
                         var r=confirm(msg);
                         if (r==true){
                            $(t).append("<input type='hidden' name='delete' value='yes'; >");
@@ -93,10 +81,11 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                             //$(t).val("no");
                         }
                     }
-                </script>
-            </form>
-            </td></tr>
-     <?   }
+                </script>    
+            </form> 
+
+           </td></tr>
+        <?}
     }
 ?>
                 </tbody>

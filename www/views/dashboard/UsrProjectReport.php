@@ -66,7 +66,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
-                    <tr><td style='width: 150px;'>工时数据编号</td><td style='width: 150px;'>工时数据名称</td><td style='width: 150px;'>工时数据单位</td><td style='width: 150px;'>工时数据单价</td><td style='width: 150px;'>数量</td><td></td></tr>
+                    <tr><td style='width: 150px;'>工时数据编号</td><td style='width: 150px;'>工时数据名称</td><td style='width: 150px;'>工时数据单位</td><td style='width: 150px;'>工时数据单价</td><td style='width: 150px;'>数量</td><td style='width: 150px;'>金额</td><td></td></tr>
                 </thead>
                 <tbody id='project_add_unit_table'>
                 <tr> 
@@ -82,7 +82,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                     <td><?if(count($all_unit)>0) echo $all_unit[0]['workunit']?></td>
                     <td><?if(count($all_unit)>0) echo $all_unit[0]['unitname']?></td>
                     <td><?if(count($all_unit)>0) echo $all_unit[0]['price']?></td>
-                    <td><input type='text' class='col-xs-2' style='width: 150px;' name='project_unit_amount[]'/></td>
+                    <td><input type='text' class='col-xs-2' style='width: 150px;' name='project_unit_amount[]' onkeyup="calcu(this)"/></td>
+                    <td style='width: 150px;'></td>
                     <td><button type='button' class='close' aria-hidden='true' onclick='removeCloseMe(this)'>
                     &times;</button>
                     </td></tr>
@@ -109,12 +110,20 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             //     //$("table tr td input").css("width","50");
             //     $("table tr td").css("width","50");
             // }); 
+            function calcu(t){
+                //alert($(t).val());
+                $(t).attr("value",$(t).val());
+                $(t).parent().next().text($(t).val()*$(t).parent().prev().text());
+            }
             function changeData(tt){
+                var price=data[tt.selectedIndex]['price'];
+                var amount=$(tt).parent().next().next().next().next().children("input").val();
+                //alert(amount);
                 $(tt).parent().next().text(data[tt.selectedIndex]['workunit']);
                 $(tt).parent().next().next().text(data[tt.selectedIndex]['unitname']);
-                $(tt).parent().next().next().next().text(data[tt.selectedIndex]['price']);
+                $(tt).parent().next().next().next().text(price);
                 //alert(ii.html());
-
+                $(tt).parent().next().next().next().next().next().text(price*amount);
             }
                 $('#project_add_unit').click(function() {
                     $('#project_add_unit_table').append("<tr><td>\
@@ -124,6 +133,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                     <td><?echo $all_unit[0]['unitname']?></td>\
                     <td><?echo $all_unit[0]['price']?></td>\
                     <td><input type='text' class='col-xs-2' style='width: 150px;' name='project_unit_amount[]'/></td>\
+                    <td style='width: 150px;'></td>\
                     <td><button type='button' class='close' aria-hidden='true' onclick='removeCloseMe(this)'>\
                     &times;</button></td></tr>")
                 })

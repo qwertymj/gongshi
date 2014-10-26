@@ -121,76 +121,19 @@
 						</li>
 					</ul>
 				</li> -->
-
-
 				<li class="">
-					<a href="javascript:;">
+					<a href="/dashboard/Project_Maintain">
 					<i class="icon-table"></i>
 					<span class="title">项目维护</span>
-					<span class="arrow "></span>
-					</a>
-					<ul class="sub-menu">
-						<li >
-							<a href="/dashboard/newproject">
-							<i class="icon-time"></i>新建项目
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/BossSearchProject">
-							<i class="icon-cogs"></i>查看/删除项目
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/editproject">
-							<i class="icon-table"></i>修改项目
-							</a>
-						</li>
-					</ul>
-				</li>
-
-<!-- 				<li class="">
-					<a href="/dashboard/newproject">
-					<i class="icon-bookmark-empty"></i>
-					<span class="title">新建项目</span>
-					</a>
-				</li> 
-				<li class="">
-					<a href="/dashboard/newunit">
-					<i class="icon-briefcase"></i>
-					<span class="title">新建单位</span>
 					</a>
 				</li>
 				<li class="">
-					<a href="/dashboard/BossSearchProject">
-					<i class="icon-table"></i>
-					<span class="title">查看项目/添加项目员工</span>
-					</a>
-				</li> 
-			-->
-				<li class="">
-					<a href="javascript:;">
+					<a href="/dashboard/ProjectUnit_Maintain">
 					<i class="icon-table"></i>
 					<span class="title">工时数据项维护</span>
-					<span class="arrow "></span>
 					</a>
-					<ul class="sub-menu">
-						<li >
-							<a href="/dashboard/newunit">
-							<i class="icon-time"></i>新建工时数据
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/deleteunit">
-							<i class="icon-cogs"></i>删除工时数据
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/editunit">
-							<i class="icon-table"></i>工时数据修改
-							</a>
-						</li>
-					</ul>
 				</li>
+
 
 				<? }
 				if ($user_role & 1){
@@ -199,6 +142,14 @@
 					<a href="/dashboard/UsrSearchProject">
 					<i class="icon-table"></i>
 					<span class="title">我的项目</span>
+					</a>
+				</li><? }
+				if ($user_role & 1){
+				?>
+				<li class="">
+					<a href="/dashboard/UsrSearchWork">
+					<i class="icon-table"></i>
+					<span class="title">我的工时报告</span>
 					</a>
 				</li><? }
 				if ($user_role & 2){

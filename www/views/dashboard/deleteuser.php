@@ -39,15 +39,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                         <?php 
                             
                             foreach($all_usr as $usr){
-                                echo "<option value='".$usr['name']."'>".$usr['name']."</option>";
-                                
+                                echo "<option value='".$usr['name']."'>".$usr['name']."</option>";   
                             }
-
                         ?>
                         </select>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
         </label>
