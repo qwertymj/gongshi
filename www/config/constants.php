@@ -37,7 +37,7 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 //////////////////////////////////////////////////////
-define("COPYRIGHT", "2014 &copy;bs cc.");
+define("COPYRIGHT", "2014 &copy;工时管理系统.");
 define("LOC_PREFIC", "/Users/chenke/myweb/gongshi/www");
 define("LIB", LOC_PREFIC."/lib/");
 define("VIEWPATH", LOC_PREFIC."/views/");

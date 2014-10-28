@@ -47,30 +47,18 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             <table class="table table-hover col-xs-8">
                 <tbody>
                     <tr>
+                        <?$p=array("员工维护","项目维护","工时数据项维护","我的项目",
+                        "我的工时报告","工时报告审核","工时报告结账","工时报告汇总","所有员工登录日志");
+                        $j=1;
+                        for($i=0;$i<9;$i++) {
+                            if(!($i%3)) echo "</tr><tr>"; ?>
                         <td>
                             <label class="checkbox inline">
-                            <input type="checkbox" name="type1" value="1"
-                            <?if($userinfo['role']&1) echo "checked=true";?>
-                            >普通员工
-                            </label></td>
-                        <td>
-                            <label class="checkbox inline">
-                            <input type="checkbox" name="type2" value="2" 
-                            <?if($userinfo['role']&2) echo "checked=true";?>
-                            >中间人
-                            </label></td>
-                        <td>
-                            <label class="checkbox inline">
-                            <input type="checkbox" name="type3" value="4" 
-                            <?if($userinfo['role']&4) echo "checked=true";?>
-                            >财务
-                            </label></td>
-                        <td>
-                            <label class="checkbox inline">
-                             <input type="checkbox" name="type4" value="8" 
-                            <?if($userinfo['role']&8) echo "checked=true";?>
-                             >老板
-                            </label></td>
+                            <input type="checkbox" name="type[]" value=<?echo $j;?>
+                            <?if($userinfo['role']& $j) echo "checked=true";?>><?
+                            echo $p[$i];  ?>
+                            </label></td> <? $j<<=1;}?>
+  
                     </tr>
     
                 </tbody>

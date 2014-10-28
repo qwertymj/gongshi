@@ -64,22 +64,22 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 <input type="hidden" name="unit_bh" value=<?php echo $row["bh"]; ?> >
                 <div align="center">
 
-                    <button type="submit" class="btn" onclick="show_confirm(this)"  value=<?php echo $row["bh"]; ?>>删除该工时数据</button>
+                    <button type="submit" class="btn" onclick="return show_confirm(this)"  value=<?php echo $row["bh"]; ?>>删除该工时数据</button>
                 </div>
                 <script type="text/javascript">
                     function show_confirm(t)
                     {
 
                         var msg='确认删除工时数据'+$(t).val()+'吗';
-                        var r=confirm(msg);
-                        if (r==true){
-                           $(t).append("<input type='hidden' name='delete' value='yes'; >");
+                        return confirm(msg);
+                        // if (r==true){
+                        //    $(t).append("<input type='hidden' name='delete' value='yes'; >");
                 
-                        }
-                        else{
-                            $(t).append("<input type='hidden' name='delete' value='no'; >");
-                            //$(t).val("no");
-                        }
+                        // }
+                        // else{
+                        //     $(t).append("<input type='hidden' name='delete' value='no'; >");
+                        //     //$(t).val("no");
+                        // }
                     }
                 </script>    
             </form> 

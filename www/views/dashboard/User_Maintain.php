@@ -73,27 +73,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
                 <div align="center">
 
-                    <button type="submit" class="btn" onclick="show_confirm(this)" 
+                    <button type="submit" class="btn" onclick="return show_confirm(this)" 
                     value=<?echo $row["name"];?>>
                     删除
                     </button>
                 </div>
-                <script type="text/javascript">
-                    function show_confirm(t)
-                    {
 
-                        var msg='确认删除'+$(t).val()+'吗';
-                        var r=confirm(msg);
-                        if (r==true){
-                           $(t).append("<input type='hidden' name='delete' value='yes'; >");
-                
-                        }
-                        else{
-                            $(t).append("<input type='hidden' name='delete' value='no'; >");
-                            //$(t).val("no");
-                        }
-                    }
-                </script>
             </form>
             </td></tr>
      <?   }
@@ -106,7 +91,14 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 
 
+    <script type="text/javascript">
+        function show_confirm(t)
+        {
 
+            var msg='确认删除'+$(t).val()+'吗';
+            return confirm(msg);
+        }
+    </script>
 
 	</div>
 	</div>

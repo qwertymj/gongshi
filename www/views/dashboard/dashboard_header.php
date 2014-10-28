@@ -56,16 +56,17 @@
 				<!-- END RESPONSIVE MENU TOGGLER -->
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav pull-right">
+	
 					<li class="dropdown user">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<img alt="" src="/media/image/avatar1_small.jpg" />
 						<span class="username"><?=@$account_name?></span>
-						<i class="icon-angle-down"></i>
+						
 						</a>
-						<ul class="dropdown-menu">
-							<li><a href="/dashboard/logout"><i class="icon-key"></i>退出</a></li>
-						</ul>
 					</li>
+					<li><a href="/dashboard/editmypsd">修改密码</a></li>				
+					<li><a href="/dashboard/logout">注销</a></li>
+					
 					<!-- END USER LOGIN DROPDOWN -->
 				</ul>
 				<!-- END TOP NAVIGATION MENU -->
@@ -87,7 +88,7 @@
 				</li>
 				<li>
 				</li>
-				<?php if ($user_role & 8 ) { ?>
+				<?php if ($user_role & 1 ) { ?>
 				
 
 				<li class="">
@@ -95,38 +96,15 @@
 					<i class="icon-table"></i>
 					<span class="title">员工维护</span>
 					</a>
-				</li>
-
-<!-- 				<li class="">
-					<a href="javascript:;">
-					<i class="icon-table"></i>
-					<span class="title">员工维护</span>
-					<span class="arrow "></span>
-					</a>
-					<ul class="sub-menu">
-						<li >
-							<a href="/dashboard/newuser">
-							<i class="icon-time"></i>新建员工
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/deleteuser">
-							<i class="icon-cogs"></i>删除员工
-							</a>
-						</li>
-						<li >
-							<a href="/dashboard/edituser">
-							<i class="icon-table"></i>修改员工密码
-							</a>
-						</li>
-					</ul>
-				</li> -->
+				</li><? }
+				if ($user_role & 2 ) { ?>
 				<li class="">
 					<a href="/dashboard/Project_Maintain">
 					<i class="icon-table"></i>
 					<span class="title">项目维护</span>
 					</a>
-				</li>
+				</li><? }
+				if ($user_role & 4 ) { ?>
 				<li class="">
 					<a href="/dashboard/ProjectUnit_Maintain">
 					<i class="icon-table"></i>
@@ -136,7 +114,7 @@
 
 
 				<? }
-				if ($user_role & 1){
+				if ($user_role & 8){
 				?>
 				<li class="">
 					<a href="/dashboard/UsrSearchProject">
@@ -144,7 +122,7 @@
 					<span class="title">我的项目</span>
 					</a>
 				</li><? }
-				if ($user_role & 1){
+				if ($user_role & 16){
 				?>
 				<li class="">
 					<a href="/dashboard/UsrSearchWork">
@@ -152,7 +130,7 @@
 					<span class="title">我的工时报告</span>
 					</a>
 				</li><? }
-				if ($user_role & 2){
+				if ($user_role & 32){
 				?>
 				<li class="">
 					<a href="/dashboard/SHProject">
@@ -160,7 +138,7 @@
 					<span class="title">工时报告审核</span>
 					</a>
 				</li><? }
-				if ($user_role & 4){
+				if ($user_role & 64){
 				?>
 				<li class="">
 					<a href="/dashboard/ProjectJZ">
@@ -168,8 +146,30 @@
 					<span class="title">工时报告结账</span>
 					</a>
 				</li>
-				<?}?>
+				<?}if ($user_role & 128){?>
+				<li class="">
+					<a href="/dashboard/BossSearchWork">
+					<i class="icon-table"></i>
+					<span class="title">工时报告汇总</span>
+					</a>
+				</li>
+				<?}if ($user_role & 256 ) {?>
+				<li class="">
+					<a href="/dashboard/AllUsrLogin_log">
+					<i class="icon-table"></i>
+					<span class="title">所有员工登录日志</span>
+					</a>
+				</li>
 
+				<?}?>
+				
+				<li class="">
+					<a href="/dashboard/UsrSearchLogin_log">
+					<i class="icon-table"></i>
+					<span class="title">登录日志</span>
+					</a>
+				</li>
+				
 			</ul>
 		</div>
 		<!-- END SIDEBAR -->

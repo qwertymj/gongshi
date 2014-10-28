@@ -23,7 +23,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             <label class="control-label">员工账号</label>
             <div class="controls">
                 <input type="text" class="span6 m-wrap" name="name">
-            </d
+            </div>
 		<div class="control-group">
 			<label class="control-label">姓名</label>
 			<div class="controls">
@@ -55,18 +55,33 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             <table class="table table-hover col-xs-8">
                 <tbody>
                     <tr>
-                        <td><label class="checkbox inline">
+                        <?$p=array("员工维护","项目维护","工时数据项维护","我的项目",
+                        "我的工时报告","工时报告审核","工时报告结账","工时报告汇总","所有员工登录日志");
+                        $j=1;
+                        for($i=0;$i<9;$i++) {
+                            if(!($i%3)) echo "</tr><tr>"; ?>
+                        <td>
+                            <label class="checkbox inline">
+                            <input type="checkbox" name="type[]" value=<?echo $j;?>>
+                            <? echo $p[$i];  ?>
+                            </label></td> <? $j<<=1;}?>
+
+
+<!--                         <td><label class="checkbox inline">
                         <input type="checkbox" name="type1" value="1"> 普通员工
                         </label></td>
+                        
                         <td><label class="checkbox inline">
-                    <input type="checkbox" name="type2" value="2" >中间人
-                </label></td>
+                        <input type="checkbox" name="type2" value="2" >中间人
+                        </label></td>
+                        
                         <td><label class="checkbox inline">
-             <input type="checkbox" name="type3" value="4" >财务
-            </label></td>
+                        <input type="checkbox" name="type3" value="4" >财务
+                        </label></td>
+
                         <td><label class="checkbox inline">
-             <input type="checkbox" name="type4" value="8" >老板
-            </label></td>
+                        <input type="checkbox" name="type4" value="8" >老板
+                        </label></td> -->
                     </tr>
     
                 </tbody>

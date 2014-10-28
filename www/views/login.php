@@ -5,7 +5,7 @@
 <!-- BEGIN HEAD -->
 <head>
 	<meta charset="utf-8" />
-	<title>ZJU Stock C2 | 登录</title>
+	<title>工时管理系统 | 登录</title>
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -26,11 +26,11 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="login">
+<body class="login" onkeydown="keyLogin()">
 	<!-- BEGIN LOGO -->
 	<div class="logo">
 		<!-- <img src="media/image/logo-big.png" alt="生仪学院" /> -->
-		<h2 style="color:#999">C2</h2>
+		<h2 style="color:#999">工时管理系统</h2>
 	</div>
 	<!-- END LOGO -->
 	<!-- BEGIN LOGIN -->
@@ -38,13 +38,19 @@
 		<!-- BEGIN LOGIN FORM -->
 		<form class="form-vertical login-form" action="/login" method="post">
 			<h3 class="form-title">登录</h3>
-			<?php
-			if (@$wrong_user) { ?>
-				<div class="alert alert-error">
-					<button class="close" data-dismiss="alert"></button>
-					<span>错误的用户名或者密码</span>
-				</div>
-			<?php } ?>
+        <?php
+        if (@$empty_user && @$post) { ?>
+        <div class="alert alert-error">
+           <a class="close" data-dismiss="alert"></a>
+           <span>请输入用户名和密码</span>
+        </div>
+        <?php } 
+        else if(@$wrong_user) { ?>
+          <div class="alert alert-error">
+              <a class="close" data-dismiss="alert"></a>
+              <span>错误的用户名或者密码</span>
+          </div>
+        <?php }  ?>
 			<div class="alert alert-error hide">
 				<button class="close" data-dismiss="alert"></button>
 				<span>请输入用户名和密码</span>
@@ -69,10 +75,8 @@
 				</div>
 			</div>
 			<div class="form-actions">
-				<label class="checkbox">
-				<input type="checkbox" name="remember" value="1"/> 记住我
-				</label>
-				<button type="submit" class="btn green pull-right">
+
+				<button type="submit" class="btn green pull-right" id="logbtn">
 				登录 <i class="m-icon-swapright m-icon-white"></i>
 				</button>
 			</div>
@@ -123,9 +127,16 @@
 	<!-- END PAGE LEVEL SCRIPTS -->
 	<script>
 		jQuery(document).ready(function() {
-		  App.init();
-		  Login.init();
+		  //App.init();
+		  //Login.init();
 		});
+		function keyLogin(){
+		  if (event.keyCode==13)   //回车键的键值为13
+		  
+		  	//alert(123);
+		     document.getElementById("logbtn").click();  //调用登录按钮的登录事件
+		  
+		}
 	</script>
 	<!-- END JAVASCRIPTS -->
 </body>

@@ -72,42 +72,33 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                     <button type="submit" class="btn" >添加员工</button>
                 </div>
             </form>
-             </td><td>
+             
+            <?php }
+            else echo "</td><td>";?>
+            </td><td>
             <form action="/dashboard/deleteproject" method='post'>
                 <input type="hidden" name="project_code" value=<?php echo $row["project_code"]; ?> >
                 <div align="center">
 
-                    <button type="submit" class="btn" onclick="show_confirm(this)"  value=<?php echo $row["project_code"]; ?>>删除该项目</button>
+                    <button type="submit" class="btn" onclick="return show_confirm(this)"  value=<?php echo $row["project_code"]; ?>>删除该项目</button>
                 </div>
-                <script type="text/javascript">
-                    function show_confirm(t)
-                    {
-
-                        var msg='确认删除项目'+$(t).val()+'吗';
-                        var r=confirm(msg);
-                        if (r==true){
-                           $(t).append("<input type='hidden' name='delete' value='yes'; >");
-                
-                        }
-                        else{
-                            $(t).append("<input type='hidden' name='delete' value='no'; >");
-                            //$(t).val("no");
-                        }
-                    }
-                </script>    
+   
             </form> 
-            <?php 
-            }
-            else echo "</td><td></td><td>";
-            echo "</td></tr>";
-        }
+            </td></tr>
+        <?}
     }
 ?>
                 </tbody>
             </table>
         </label>
 </div>
-
+    <script type="text/javascript">
+        function show_confirm(t)
+        {
+            var msg='确认删除项目'+$(t).val()+'吗';
+            return confirm(msg);
+        }
+    </script> 
 
 
 

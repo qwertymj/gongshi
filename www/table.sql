@@ -3,8 +3,8 @@ use gongshi;
 
 CREATE TABLE t_user(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL, #
-    username varchar(100) NOT NULL,
+    name VARCHAR(50) NOT NULL, #登录账号
+    username varchar(100) NOT NULL,#用户名字
     job varchar(50) ,
     password VARCHAR(50) NOT NULL, # 
     sts int,        # 这个用户是否已经没取消，如果取消，不能登陆
@@ -23,7 +23,8 @@ CREATE TABLE t_project(
     pcontent varchar(200), # 项目备注
     startdate date, 
     enddate date,
-    seq int     # 项目排序顺序，后台可以调整
+    seq int,    # 项目排序顺序，后台可以调整
+    isavailable int
 ); 
 
 
@@ -60,7 +61,7 @@ CREATE TABLE t_work_log_project(
     projectsum int, # 数量 ok
     worklogproject varchar(200), # 备注 ok
     sts int, # 四个状态，上报，审核完成，退回，以结帐
-    unitname varchar(50), # 单位 
+    unitname varchar(50), # 单位 unitname 如 台
     price float, # 单价 ok
     je float, # 金额 calcu
     shr varchar(50), # 审核人名字 ok
@@ -69,14 +70,17 @@ CREATE TABLE t_work_log_project(
     shcontent varchar(100), # 审核意见
     notes varchar(100), # 历史审核意见 delete
     bh varchar(40), # 编号
-    workunit varchar(40), # 对应t_project_workunit unitname
-    workunitid int # 对应t_project_workunit id
+    workunit varchar(40), # 对应t_project_workunit 名称，如搬家
+    workunitid int, # 对应t_project_workunit id
+    isavailable int
 );
 
 CREATE TABLE t_login_log(
     id int PRIMARY KEY AUTO_INCREMENT,  #logid
     uname varchar(50), # 登录者uname
+    username varchar(100),
     login_datetime datetime,#登录时间
-    login_ip varchar(50)
+    login_ip varchar(50),
+    sts int
 );
 insert into t_user (name,password,sts,seq,role) values ("admin",md5("admin"),0,0,0b1000);

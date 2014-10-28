@@ -63,7 +63,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 
                 <div align="center">
 
-                    <button type="submit" class="btn" >申报该项目</button>
+                    <button type="submit" class="btn" >新建工时报告</button>
                 </div>
             </form>
             <?php 

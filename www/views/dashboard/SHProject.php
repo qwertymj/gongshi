@@ -34,23 +34,30 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
-                    <tr><td>项目代码</td><td>项目名称</td><td>项目状态</td><td>项目提交人</td><td>材料总数</td><td>材料单价</td><td>项目总金额</td><td>材料编号</td><td>材料名称</td><td></td><td></td></tr>
+                    <tr><td>项目代码</td><td>项目名称</td>
+                        <td>报告状态</td><td>报告编号</td>
+                        <td>提交人</td><td>数量</td>
+                        <td>单价</td><td>金额</td>
+                        <td>数据项编号</td><td>数据项名称</td>
+                        <td></td><td></td></tr>
                 </thead>
                 <tbody >
     <?php
-    $sts=array("项目已被取消","项目待申报","项目待审核","项目待结账","项目已结账");
+    $sts=array("报告已被取消","项目待申报","报告待审核","报告待结账","报告已结账");
     //var_dump($Search_result);
     if(@$SHSearch_res && $SHSearch_res)
     {
         //project_code,project_name,startdate,enddate,sts,pcontent
         foreach($SHSearch_res as $row){
-            echo "<tr> <td>";
+            echo "<tr><td>";
             echo $row['project_code'];
             echo "</td><td>"; 
             echo $row['project_name'];            
             echo "</td><td>";
             echo $sts[$row['sts']];
             echo "</td><td>";
+            echo $row['work_log_id'];
+            echo "</td><td>"; 
             echo $row['uname'];
             echo "</td><td>";
             echo $row['projectsum'];

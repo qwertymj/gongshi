@@ -7,7 +7,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
     <?php
     //var_dump($error);
-    if(@$addsuccess && $addsuccess)
+    if(@$success && $success)
     {
         ?> <div class="alert alert-success">添加成功！</div> <?php
     }

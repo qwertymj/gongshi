@@ -2,13 +2,13 @@
 include(VIEWPATH."dashboard/dashboard_header.php");
 ?>
 <div class='row-fluid'>
-	<div class="row-fluid">
-	<div class="span12">
+    <div class="row-fluid">
+    <div class="span12">
 
     <?php
-    if(@$addsuccess && $addsuccess)
+    if(@$deletesuccess && $deletesuccess)
     {
-        ?> <div class="alert alert-success">查询成功！</div> <?php
+        ?> <div class="alert alert-success">删除成功！</div> <?php
     }
     else if (@$error && count($error) > 0) { ?>
         <div class="alert alert-warning">
@@ -22,18 +22,17 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 <div class="control-group">
     
-    <label class="col-xs-2 control-label" >我的工时报告
-            <form action="/dashboard/project_report" class="pull-right" method='get'>
-                <button type="submit" class="btn" >新建工时报告</button>
-            </form>
+    <label class="col-xs-2 control-label" >工时报告汇总
     </label>
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
                     <tr><td>项目代码</td><td>项目名称</td>
                         <td>报告状态</td><td>报告编号</td>
+                        <td>提交人</td><td>审核人</td>
                         <td>工时数据数量</td><td>单价</td>
-                        <td>金额</td><td>数据项编号</td><td>数据项名称</td><td></td></tr>
+                        <td>金额</td><td>数据项编号</td><td>数据项名称</td><td></td>
+                </tr>
                 </thead>
                 <tbody >
     <?php
@@ -54,6 +53,10 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo "</td><td>";
             echo $row['work_log_id'];
             echo "</td><td>";
+            echo $row['username'];            
+            echo "</td><td>";
+            echo $row['shrname'];            
+            echo "</td><td>";
             echo $row['projectsum'];
             echo "</td><td>";
             echo $row['price'];
@@ -62,26 +65,25 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo "</td><td>";
             echo $row['bh'];
             echo "</td><td>";
-            echo $row['workunit'];
-            if($row['sts']==2){ ?>
+            echo $row['workunit'];?>
             </td><td>
                 <form action="/dashboard/delete_work" method='post'>
                     <input type="hidden" name="work_log_id" value=<?php echo $row["work_log_id"]; ?> >
-                    <input type="hidden" name="usr" value=<?php echo 1; ?> >
+                    <input type="hidden" name="boss" value=<?php echo 1; ?> >
                     
                     <div align="center">
                         <button type="submit" class="btn" onclick="return show_confirm(this)">删除工时报告</button>
                     </div>
+
                 </form>
-            <? } else
-                echo "</td><td>";
-            echo "</td></tr>";
+            <? echo "</td></tr>";
 
         }
     }
 ?>
                 </tbody>
             </table>
+
         </label>
         <div class="control-group">
             <label class="control-label " >
@@ -94,6 +96,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             </label>
         </div>
 </div>
+
 <? 
 function num_to_rmb($num){
         $c1 = "零壹贰叁肆伍陆柒捌玖";
@@ -192,9 +195,8 @@ function num_to_rmb($num){
         }
     </script>
 
-
-	</div>
-	</div>
+    </div>
+    </div>
 </div>
 <?php
 include(VIEWPATH."dashboard/include_js.php");
