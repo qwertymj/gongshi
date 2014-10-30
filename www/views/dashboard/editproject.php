@@ -33,10 +33,16 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 <input type="text" class="span6 m-wrap" name="project_name" value=<?php echo $project_info['project_name'];?>>
             </div>
         </div>
-
+        <div class="control-group">
+            <label class="control-label">当前项目序号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="project_seq" value=<?php echo $project_info['seq'];?>>
+            </div>
+        </div>
         <div class="control-group">
             <label class="control-label" >当前项目状态:<?php if($project_info['sts']) echo "进行中"; else echo "已取消"?></label>
         </div>
+
         <div class="control-group">
             <label class="control-label">设置项目状态</label>
             <div class="controls">
@@ -58,9 +64,9 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 <tbody id='startenddate'>
                 <tr>
 
-                    <td><input type='text' class='form-control' name='startdate' value=<?php echo $project_info['startdate'];?>>
+                    <td><input type='text' class='Wdate form-control' name='startdate' value=<?php echo $project_info['startdate'];?> onclick="WdatePicker({isShowClear:true,readOnly:true})">
                     </td>
-                    <td><input type='text' class='form-control' name='enddate' value=<?php echo $project_info['enddate'];?>>
+                    <td><input type='text' class='Wdate form-control' name='enddate' value=<?php echo $project_info['enddate'];?> onclick="WdatePicker({isShowClear:true,readOnly:true})">
                     </td></tr>
 
                 </tbody>

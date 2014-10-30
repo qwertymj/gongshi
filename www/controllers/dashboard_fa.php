@@ -3,8 +3,8 @@
 		var $username;
 		var $password;
 		var $user_type;
-		var $mysite_url="http://www.zjdxwyxyxly.0x271828.com/";
-		//var $mysite_url="http://localhost:600/";
+		//var $mysite_url="http://www.zjdxwyxyxly.0x271828.com/";
+		var $mysite_url="http://localhost:600/";
 		
 		public function __construct()
         {
@@ -90,49 +90,16 @@
 			//} else {	
 
 			//}	
-			$error = array();
-			if($this->data['user_role'] & 1){
-				$deleteuser = $this->input->post("deleteuser", true);
-				if(@$deleteuser && $deleteuser==1 ){
-					$this->deleteuser();
-				}
-				$count=$this->userinfo->Search_role(0xffff);
-				$url=$this->mysite_url."dashboard/User_Maintain/";
-				$config=$this->page_config(count($count),$url);
-				//var_dump($config);
-				$this->pagination->initialize($config);
-				$this->data['page_links']=$this->pagination->create_links();
-				$this->data['all_usr']=$this->userinfo->Page_Search_role(0xffff,intval($config['cur_page']),$config['per_page']);
-			}else {$error[] = "你没有该权限";}
-			$this->data['error'] = $error;
+			$count=$this->userinfo->Search_role(0xffff);
+			$url=$this->mysite_url."dashboard/User_Maintain/";
+			$config=$this->page_config(count($count),$url);
+			//var_dump($config);
+			$this->pagination->initialize($config);
+			$this->data['page_links']=$this->pagination->create_links();
+			$this->data['all_usr']=$this->userinfo->Page_Search_role(0xffff,intval($config ['cur_page']),$config['per_page']);
+
 			//$this->data['all_usr']=$this->userinfo->Search_role(0xffff);
 			$this->load->view("dashboard/User_Maintain", $this->data);	
-		}
-		public function deleteuser($method = "") {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				;// if ($method == "password")
-					// $this->data['inputpassword'] = true;
-			} else {
-				//echo "12qdafs";
-				//if($this->input->post("delete", true)=="yes"){
-				$error = array();
-				if($this->data['user_role'] & 1){
-					$username = $this->input->post("name", true);
-
-					if (@$username && $username != "") {
-						if(	$this->userinfo->Search_user($username)){
-							$this->userinfo->deleteuser($username);
-							$this->data['success']=true;
-						}
-						else {$error[]= "该用户已被删除";}
-
-					} else 	{	$error[] = "请选择要删除的用户";}
-				}else {$error[] = "你没有该权限";}
-				$this->data['error'] = $error;
-				//}
-			}
-			//$this->data['all_usr']=$this->userinfo->Search_role(0xffff);
-			//$this->load->view("dashboard/User_Maintain", $this->data);
 		}
 		public function newuser($method = "") {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -148,7 +115,7 @@
 				$passwdagain = $this->input->post("passwdagain", true);
 				$job = $this->input->post("job", true);
 				$role = $this->input->post("type", true);
-				$seq = $this->input->post("seq", true);
+
 				//var_dump($role);
 
 				if (@$name && $name != "") {
@@ -162,7 +129,7 @@
 										$type+=$r;
 									}
 									if(!$this->userinfo->SearchAuthority($name)){
-										$this->userinfo->adduser($name,$username,$passwd,$job,$type,$seq);
+										$this->userinfo->adduser($name,$username,$passwd,$job,$type);
 										$this->data['addsuccess']=true;
 									} else { $error[] = "该账号已经存在"; }
 								} else { $error[] = "未选择员工类型"; }
@@ -193,20 +160,19 @@
 				//$passwdagain = $this->input->post("passwdagain", true);
 				$job = $this->input->post("job", true);
 				$role = $this->input->post("type", true);
-				$seq = $this->input->post("seq", true);
 				$type=0;
-
+				foreach ($role as $r) {
+					$type+=$r;
+				}
 				
 
 				if (@$new_username && $new_username != "") {
 					//if (@$passwd && $passwd != "") {
 						//if (@$passwdagain && $passwdagain != "") {
 						//	if ($passwd==$passwdagain)  {
-								if (@$role && $role != "") {
-									foreach ($role as $r) {
-										$type+=$r;
-									}
-									$this->userinfo->edituser($name,$new_username,$job,$type,$seq);
+								if (@$type && $type != "") {
+									
+									$this->userinfo->edituser($name,$new_username,$job,$type);
 									$this->data['success']=true;
 								} else { $error[] = "未选择员工类型"; }
 						//	} else { $error[] = "两次密码输入不一致";}
@@ -288,7 +254,33 @@
 			//$this->data['all_usr']=$this->userinfo->Search_role(7);
 			$this->load->view("dashboard/edituserpsd", $this->data);
 		}
+		public function deleteuser($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				;// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+				//echo "12qdafs";
+				//if($this->input->post("delete", true)=="yes"){
+				$error = array();
+				if($this->data['user_role'] & 1){
+					$username = $this->input->post("name", true);
 
+					if (@$username && $username != "") {
+						if(	$this->userinfo->Search_user($username)){
+							$this->userinfo->deleteuser($username);
+							$this->data['success']=true;
+						}
+						else {$error[]= "该用户已被删除";}
+
+					} else 	{	$error[] = "请选择要删除的用户";}
+				}else {$error[] = "你没有该权限";}
+				$this->data['error'] = $error;
+				//}
+			}
+			$this->data['all_usr']=$this->userinfo->Search_role(0xffff);
+			$this->User_Maintain();
+			//$this->load->view("dashboard/User_Maintain", $this->data);
+		}
 		public function ProjectUnit_Maintain() {
 			//if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			//	;
@@ -297,18 +289,15 @@
 				if($this->data['user_role'] & 4){
 					//$this->data['Search_result']=$this->project->SearchAllProject();
 					//$this->data['all_unit']=$this->project->Search_Unit();	
-					$deleteunit = $this->input->post("deleteunit", true);
-					if(@$deleteunit && $deleteunit==1 ){
-						$this->deleteunit();
-					}
-					$count=$this->project->Search_Unit();
-					$url=$this->mysite_url."dashboard/ProjectUnit_Maintain/";
-					$config=$this->page_config(count($count),$url);
-					//var_dump($config);
-					$this->pagination->initialize($config);
-					$this->data['page_links']=$this->pagination->create_links();
-					$this->data['all_unit']=$this->project->Page_Search_Unit(intval($config['cur_page']),$config['per_page']);
-					//$this->data['config']=$config;
+
+			$count=$this->project->Search_Unit();
+			$url=$this->mysite_url."dashboard/ProjectUnit_Maintain/";
+			$config=$this->page_config(count($count),$url);
+			//var_dump($config);
+			$this->pagination->initialize($config);
+			$this->data['page_links']=$this->pagination->create_links();
+			$this->data['all_unit']=$this->project->Page_Search_Unit(intval($config ['cur_page']),$config['per_page']);
+
 			//$this->data['all_usr']=$this->userinfo->Search_role(0xffff);
 			
 				}
@@ -317,6 +306,39 @@
 				$this->data['error'] = $error;
 			//}
 			$this->load->view("dashboard/ProjectUnit_Maintain", $this->data);
+		}
+		public function editunit($method = "") {
+			if ($_SERVER['REQUEST_METHOD'] == "GET") {
+				$bh = $this->input->get("unit_bh", true);
+				// if ($method == "password")
+					// $this->data['inputpassword'] = true;
+			} else {
+			if($this->data['user_role'] & 4){
+				$bh = $this->input->post("unit_bh", true);
+				$unit_name = $this->input->post("unit_name", true);
+				$price = $this->input->post("price", true);
+				$workunit = $this->input->post("workunit", true);
+				$error = array();
+				
+				if (@$unit_name && $unit_name != "") {
+					if (@$price && $price != "") {
+						if (@$workunit && $workunit != "") {
+							if (@$bh && $bh != "")  {
+								if ($this->project->isBhExist($bh)) {
+									
+									$this->project->EditWorkUnit($unit_name,$price,$workunit,$bh);
+									$this->data['success']=true;
+								} else { $error[] = "该编号不存在"; }
+							} else { $error[] = "编号不能为空";}
+						} else { $error[] = "名称不能为空";}
+					} else {	$error[] = "单价不能为空"; }
+				} else 	{	$error[] = "单位名称不能为空";}
+			}else {$error[] = "你没有该权限";}
+			$this->data['error'] = $error;
+			}
+
+			$this->data['unit_info']=$this->project->Search_Unit_by_Bh($bh);	
+			$this->load->view("dashboard/editunit", $this->data);
 		}
 		public function deleteunit($method = "") {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
@@ -339,45 +361,11 @@
 				$this->data['error'] = $error;
 				
 			}
-			//$this->data['all_unit']=$this->project->Search_Unit();	
+			$this->data['all_unit']=$this->project->Search_Unit();	
 
+			$this->ProjectUnit_Maintain();
 			//$this->load->view("dashboard/ProjectUnit_Maintain", $this->data);
 		}
-		public function editunit($method = "") {
-			if ($_SERVER['REQUEST_METHOD'] == "GET") {
-				$bh = $this->input->get("unit_bh", true);
-				// if ($method == "password")
-					// $this->data['inputpassword'] = true;
-			} else {
-			if($this->data['user_role'] & 4){
-				$bh = $this->input->post("unit_bh", true);
-				$unit_name = $this->input->post("unit_name", true);
-				$price = $this->input->post("price", true);
-				$workunit = $this->input->post("workunit", true);
-				$seq = $this->input->post("seq", true);
-				$error = array();
-				
-				if (@$unit_name && $unit_name != "") {
-					if (@$price && $price != "") {
-						if (@$workunit && $workunit != "") {
-							if (@$bh && $bh != "")  {
-								if ($this->project->isBhExist($bh)) {
-									
-									$this->project->EditWorkUnit($unit_name,$price,$workunit,$bh,$seq);
-									$this->data['success']=true;
-								} else { $error[] = "该编号不存在"; }
-							} else { $error[] = "编号不能为空";}
-						} else { $error[] = "名称不能为空";}
-					} else {	$error[] = "单价不能为空"; }
-				} else 	{	$error[] = "单位名称不能为空";}
-			}else {$error[] = "你没有该权限";}
-			$this->data['error'] = $error;
-			}
-
-			$this->data['unit_info']=$this->project->Search_Unit_by_Bh($bh);	
-			$this->load->view("dashboard/editunit", $this->data);
-		}
-
 		public function newunit($method = "") {
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
 				;// if ($method == "password")
@@ -389,7 +377,6 @@
 				$price = $this->input->post("price", true);
 				$workunit = $this->input->post("workunit", true);
 				$bh = $this->input->post("bh", true);
-				$seq = $this->input->post("seq", true);
 				//echo "123cc".$unit_name."455cc";
 				
 				if (@$unit_name && $unit_name != "") {
@@ -398,7 +385,7 @@
 							if (@$bh && $bh != "")  {
 								if (!$this->project->isBhExist($bh)) {
 									
-									$this->project->AddWorkUnit($unit_name,$price,$workunit,$bh,$seq);
+									$this->project->AddWorkUnit($unit_name,$price,$workunit,$bh);
 									$this->data['addsuccess']=true;
 								} else { $error[] = "该编号已经存在"; }
 							} else { $error[] = "编号不能为空";}
@@ -417,18 +404,14 @@
 				$error = array();
 				
 				if($this->data['user_role'] & 2){
-					$deleteproject = $this->input->post("deleteproject", true);
-					if(@$deleteproject && $deleteproject==1 ){
-						$this->deleteproject();
-					}
 					//$this->data['Search_result']=$this->project->SearchAllProject();
-					$count=$this->project->SearchAllProject();
-					$url=$this->mysite_url."dashboard/Project_Maintain/";
-					$config=$this->page_config(count($count),$url);
-					//var_dump($config);
-					$this->pagination->initialize($config);
-					$this->data['page_links']=$this->pagination->create_links();
-					$this->data['Search_result']=$this->project->Page_SearchAllProject(intval($config['cur_page']),$config['per_page']);
+			$count=$this->project->SearchAllProject();
+			$url=$this->mysite_url."dashboard/Project_Maintain/";
+			$config=$this->page_config(count($count),$url);
+			//var_dump($config);
+			$this->pagination->initialize($config);
+			$this->data['page_links']=$this->pagination->create_links();
+			$this->data['Search_result']=$this->project->Page_SearchAllProject(intval($config ['cur_page']),$config['per_page']);
 
 				}else {$error[] = "你没有该权限";}
 
@@ -457,7 +440,8 @@
 					$this->data['error'] = $error;
 				//}
 			}
-			//$this->data['Search_result']=$this->project->SearchAllProject();
+			$this->data['Search_result']=$this->project->SearchAllProject();
+			$this->Project_Maintain();
 			//$this->load->view("dashboard/Project_Maintain", $this->data);
 		}
 		public function editproject($method = "") {
@@ -477,13 +461,12 @@
 				$startdate = $this->input->post("startdate", true);
 				$enddate = $this->input->post("enddate", true);
 				$sts = $this->input->post("sts", true);
-				$project_seq = $this->input->post("project_seq", true);
-				
+	
 				if (@$project_code && $project_code != "") {
 					if (@$project_name && $project_name != "") {
 						if ($startdate != "" || $enddate != "") {						
 								if($this->project->SearchProject_by_code($project_code)){
-									$this->project->editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent,$project_seq);
+									$this->project->editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent);
 
 									$this->data['success']=true;
 								}else { $error[] = "该项目代码不存在！"; }						
@@ -516,6 +499,8 @@
 					//echo "1fafasdfasdf";
 				}
 				else{
+
+
 
 					$t=$this->input->post("project_user", true);
 					//var_dump($project_user);
@@ -560,7 +545,6 @@
 			if($this->data['user_role'] & 2){	
 				$project_code = $this->input->post("project_code", true);
 				$project_name = $this->input->post("project_name", true);
-				$project_seq = $this->input->post("project_seq", true);
 				$pcontent = $this->input->post("pcontent", true);
 				$project_user = array_filter(array_unique($this->input->post("project_user", true)));
 				$startdate = $this->input->post("startdate", true);
@@ -571,7 +555,7 @@
 						if ($startdate != "" || $enddate != "") {
 							if (@$project_user && $project_user != "") {
 								if(!$this->project->SearchProject_by_code($project_code)){
-									$this->project->AddProject($project_code,$project_name,$startdate,$enddate,$pcontent,$project_seq);
+									$this->project->AddProject($project_code,$project_name,$startdate,$enddate,$pcontent);
 									foreach($project_user as $each_add_user){
 										$this->project->AddProjectUser($project_code,$each_add_user);
 									}
@@ -604,7 +588,8 @@
 			} else {$error[] = "你没有该权限";}
 				$this->data['error'] = $error;
 			}
-			$this->load->view("dashboard/Project_Maintain", $this->data);
+			$this->Project_Maintain();
+			//$this->load->view("dashboard/Project_Maintain", $this->data);
 		}
 
 		public function UsrSearchLogin_log() {
@@ -616,39 +601,21 @@
 				//if($this->data['user_role'] & 1){
 					$count=$this->userinfo->User_Search_MyLoginfo($this->username);
 					$url=$this->mysite_url."dashboard/UsrSearchLogin_log/";
+
 					$config=$this->page_config(count($count),$url);
-					$this->data['Search_result']=$this->userinfo->Page_User_Search_MyLoginfo($this->username,intval($config['cur_page']),$config['per_page']);
+					//$config ['cur_page'] = 20;
+					$this->data['Search_result']=$this->userinfo->Page_User_Search_MyLoginfo($this->username,intval($config ['cur_page']),$config['per_page']);
 					$this->pagination->initialize($config);
 					$this->data['page_links']=$this->pagination->create_links();
-				//$this->data['config']=$config;
 				//$this->data['Search_result']=$this->userinfo->User_Search_MyLoginfo($this->username);
 				//$this->data['success']=true;
 				//}else {$error[] = "你没有该权限";}
 
 				$this->data['error'] = $error;
-			///}
+			//}
 			$this->load->view("dashboard/UsrSearchLogin_log", $this->data);
 		}
-		function page_config($count, $url) {
-			$config ['base_url'] = $url; //设置基地址
-			$config ['total_rows'] = $count;
-			$config ['per_page'] = 10; //每页显示的数据数量
-			$config ['uri_segment'] = 3; //设置url上第几段用于传递分页器的偏移量
-			$config ['first_link'] = '首页';
-			$config ['last_link'] = '末页';
-			$config ['next_link'] = '下一页>';
-			$config ['prev_link'] = '<上一页';
-			$config['num_links'] = 4;//配置偏移量在url中的位置
-			$config['cur_page'] = $this->uri->segment(3);
-			//echo "chenkchen".$this->input->post("cur_page","true");
-			if($this->input->post("cur_page","true"))
-				$config ['cur_page'] = $this->input->post("cur_page","true");
-			//if($this->input->get("cur_page","true"))
-			//	$config ['cur_page'] = $this->input->post("cur_page","true");
-						
-			$this->data['config']=$config;
-			return $config;
-		}
+
 		public function AllUsrLogin_log() {
 			//if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			//	;
@@ -660,10 +627,11 @@
 					$url=$this->mysite_url."dashboard/AllUsrLogin_log/";
 					$config=$this->page_config(count($count),$url);
 					$this->data['Search_result']=$this->userinfo->Page_Search_AllUsrLogin_log(intval($config['cur_page']),$config['per_page']);
+					$config['cur_tag_open'] = '<b>';
+					$config['cur_tag_close'] = '</b>';
 					$this->pagination->initialize($config);
 					$this->data['page_links']=$this->pagination->create_links();
 					//$this->data['success']=true;
-					//$this->data['config']=$config;
 				}else {$error[] = "你没有该权限";}
 
 				$this->data['error'] = $error;
@@ -683,7 +651,7 @@
 					//var_dump($config);
 					$this->pagination->initialize($config);
 					$this->data['page_links']=$this->pagination->create_links();
-					$this->data['Search_result']=$this->project->Page_Search_Project_byUser($this->username,intval($config['cur_page']),$config['per_page']);
+					$this->data['Search_result']=$this->project->Page_Search_Project_byUser($this->username,intval($config ['cur_page']),$config['per_page']);
 					$this->data['success']=true;
 				}else {$error[] = "你没有该权限";}
 
@@ -698,17 +666,13 @@
 				$error = array();
 				//echo "123cc";
 				if($this->data['user_role'] & 16){
-					$delete_work = $this->input->post("delete_work", true);
-					if(@$delete_work && $delete_work==1 ){
-						$this->delete_work();
-					}					
 					$count=$this->project->Search_Work_byUser($this->username);
 					$url=$this->mysite_url."dashboard/UsrSearchWork/";
 					$config=$this->page_config(count($count),$url);
 					//var_dump($config);
 					$this->pagination->initialize($config);
 					$this->data['page_links']=$this->pagination->create_links();
-					$this->data['Search_result']=$this->project->Page_Search_Work_byUser($this->username,intval($config['cur_page']),$config['per_page']);
+					$this->data['Search_result']=$this->project->Page_Search_Work_byUser($this->username,intval($config ['cur_page']),$config['per_page']);
 					$this->data['success']=true;
 					//$this->data['Search_result']=$this->project->Search_Work_byUser($this->username);
 					//$this->data['success']=true;
@@ -727,17 +691,14 @@
 				//echo "123cc";
 				if($this->data['user_role'] & 128){
 					//$this->data['Search_result']=$this->project->Search_All_Work();
-					$delete_work = $this->input->post("delete_work", true);
-					if(@$delete_work && $delete_work==1 ){
-						$this->delete_work();
-					}
 					$count=$this->project->Search_All_Work();
 					$url=$this->mysite_url."dashboard/BossSearchWork/";
 					$config=$this->page_config(count($count),$url);
 					//var_dump($config);
 					$this->pagination->initialize($config);
 					$this->data['page_links']=$this->pagination->create_links();
-					$this->data['Search_result']=$this->project->Page_Search_All_Work(intval($config['cur_page']),$config['per_page']);
+					$this->data['Search_result']=$this->project->Page_Search_All_Work(intval($config ['cur_page']),$config['per_page']);
+					
 					$this->data['success']=true;
 				}else {$error[] = "你没有该权限";}
 
@@ -753,11 +714,10 @@
 			} else {
 				//echo "12qdafs";
 				//if($this->input->post("delete", true)=="yes"){
-
 				$error = array();
-				if(($this->data['user_role'] & 128)||($this->data['user_role'] & 16)){
-					//$boss = $this->input->post("boss", true);
-					//$usr = $this->input->post("usr", true);
+				if($this->data['user_role'] & 128){
+					$boss = $this->input->post("boss", true);
+					$usr = $this->input->post("usr", true);
 					$work_log_id = $this->input->post("work_log_id", true);
 					if (@$work_log_id && $work_log_id != "") {
 						if(	$this->project->Search_worklog_byid($work_log_id)){
@@ -773,14 +733,24 @@
 			}
 			//$this->data['all_usr']=$this->userinfo->Search_role(7);
 			//var_dump($boss);
-			// if(@$boss && $boss==1 ){
-			// 	$this->data['Search_result']=$this->project->Search_All_Work();
-			// 	$this->load->view("dashboard/BossSearchWork", $this->data);
-			// }
-			// else if (@$usr && $usr==1){
-			// 	$this->data['Search_result']=$this->project->Search_Work_byUser($this->username);
-			// 	$this->load->view("dashboard/UsrSearchWork", $this->data);
-			// }
+			if(@$boss && $boss==1 ){
+				//$this->BossSearchWork();
+					$count=$this->project->Search_All_Work();
+					$url=$this->mysite_url."dashboard/BossSearchWork/";
+					$config=$this->page_config(count($count),$url);
+					//var_dump($config);
+					$this->pagination->initialize($config);
+					$this->data['page_links']=$this->pagination->create_links();
+					$this->data['Search_result']=$this->project->Page_Search_All_Work(intval($config ['cur_page']),$config['per_page']);
+							
+				//$this->data['Search_result']=$this->project->Search_All_Work();
+				$this->load->view("dashboard/BossSearchWork", $this->data);
+			}
+			else if (@$usr && $usr==1){
+				$this->UsrSearchWork();
+				//$this->data['Search_result']=$this->project->Search_Work_byUser($this->username);
+				//$this->load->view("dashboard/UsrSearchWork", $this->data);
+			}
 		}
 		public function project_report() {
 			$error = array();
@@ -835,6 +805,26 @@
 			$this->data['all_unit']=$this->project->Search_Unit();			
 			$this->load->view("dashboard/UsrProjectReport", $this->data);
 		}
+		function page_config($count, $url) {
+
+			//echo $this->input->post("cur_page","true");
+			//$config ['cur_page'] = $page;
+			$config ['base_url'] = $url; //设置基地址
+			$config ['total_rows'] = $count;
+			$config ['per_page'] = 10; //每页显示的数据数量
+			$config ['uri_segment'] = 3; //设置url上第几段用于传递分页器的偏移量
+			$config ['first_link'] = '首页';
+			$config ['last_link'] = '末页';
+			$config ['next_link'] = '下一页>';
+			$config ['prev_link'] = '<上一页';
+			$config['num_links'] = 4;//配置偏移量在url中的位置
+			$config['cur_page'] = $this->uri->segment(3);
+//	$config ['cur_page'] = 20;
+			if($this->input->post("cur_page","true"))
+				$config ['cur_page'] = $this->input->post("cur_page","true");
+			echo $config ['cur_page'];
+			return $config;
+		}
 		public function SHProject(){
 			if ($_SERVER['REQUEST_METHOD'] == "GET") {
 				
@@ -844,17 +834,15 @@
 				//echo $work_log_id."cce".$sts."dsafsadf";
 				if($this->data['user_role'] & 32){
 					$project_id = $this->input->post("project_id", true);
-					$SH_result = $this->input->post("SH_result", true);//1 for yes , 2 for no
+					$SH_result = $this->input->post("SH_result", true);
 					//$sts=$this->input->post("sts", true);
-					if(@$SH_result && $SH_result){
-						$work_log_id=$this->input->post("work_log_id", true);
-						$t=$this->project->get_sts($work_log_id);
-						$sts=$t['sts'];
-						if($sts==2){
-							$this->project->update_work_log($work_log_id,$sts,$SH_result);
-							$this->data['addsuccess']=$SH_result;
-						}else { $error[]="项目目前不处于待审核状态";}
-					}
+					$work_log_id=$this->input->post("work_log_id", true);
+					$t=$this->project->get_sts($work_log_id);
+					$sts=$t['sts'];
+					if($sts==2){
+						$this->project->update_work_log($work_log_id,$sts,$SH_result);
+						$this->data['addsuccess']=$SH_result+1;
+					}else { $error[]="项目目前不处于待审核状态";}
 				}else {$error[] = "你没有该权限";}
 				$this->data['error'] = $error;
 			}
@@ -862,9 +850,10 @@
 			$url=$this->mysite_url."dashboard/SHProject/";
 			$config=$this->page_config(count($count),$url);
 			//var_dump($config);
+			//$config['cur_page']=20;
 			$this->pagination->initialize($config);
 			$this->data['page_links']=$this->pagination->create_links();
-			$this->data['SHSearch_res']=$this->project->Page_Search_SHResult_By_role($this->username,intval($config['cur_page']),$config['per_page']);
+			$this->data['SHSearch_res']=$this->project->Page_Search_SHResult_By_role($this->username,intval($config ['cur_page']),$config['per_page']);
 			
 			//$this->data['SHSearch_res']=$this->project->Search_SHResult_By_role($this->username);
 					
@@ -878,20 +867,18 @@
 				$error = array();
 				if($this->data['user_role'] & 64){
 					$project_id = $this->input->post("project_id", true);
-					$JZ_result = $this->input->post("JZ_result", true);//1 for yes , 2 for no
-					if(@$JZ_result && $JZ_result){
+					$JZ_result = $this->input->post("JZ_result", true);
 					//$sts=$this->input->post("sts", true);
-						$work_log_id=$this->input->post("work_log_id", true);
-						$t=$this->project->get_sts($work_log_id);
-						$sts=$t['sts'];
-						//echo "asdfgh".$SH_result."\n";
+					$work_log_id=$this->input->post("work_log_id", true);
+					$t=$this->project->get_sts($work_log_id);
+					$sts=$t['sts'];
+					//echo "asdfgh".$SH_result."\n";
 
-						if($sts==3){
-							//echo "dsafsadf";
-							$this->project->update_work_log($work_log_id,$sts,$JZ_result);
-							$this->data['addsuccess']=$JZ_result;
-						}else { $error[]="项目目前不处于待结账状态";}
-					}
+					if($sts==3){
+						//echo "dsafsadf";
+						$this->project->update_work_log($work_log_id,$sts,$JZ_result);
+						$this->data['addsuccess']=$JZ_result+1;
+					}else { $error[]="项目目前不处于待结账状态";}
 				}else {$error[] = "你没有该权限";}
 				$this->data['error'] = $error;
 			}
@@ -902,7 +889,7 @@
 			//var_dump($config);
 			$this->pagination->initialize($config);
 			$this->data['page_links']=$this->pagination->create_links();
-			$this->data['JZ_Search_res']=$this->project->Page_Search_JZResult_By_Sts(3,intval($config['cur_page']),$config['per_page']);
+			$this->data['JZ_Search_res']=$this->project->Page_Search_JZResult_By_Sts(3,intval($config ['cur_page']),$config['per_page']);
 						
 			$this->load->view("dashboard/ProjectJZ", $this->data);
 		}

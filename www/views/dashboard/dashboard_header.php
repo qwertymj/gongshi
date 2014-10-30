@@ -11,6 +11,8 @@
 	<meta content="" name="author" />
 		<script src="/media/js/jquery-1.10.1.min.js" type="text/javascript"></script>
 	<script src="/media/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+	<script src="/media/My97DatePicker/WdatePicker.js" type="text/javascript"></script>
+	
 	<!-- IMPORTANT! Load jquery-ui-1.10.1.custom.min.js before bootstrap.min.js to fix bootstrap tooltip conflict with jquery ui tooltip -->
 	<script src="/media/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
 	<script src="/media/js/bootstrap.min.js" type="text/javascript"></script>
@@ -57,13 +59,9 @@
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav pull-right">
 	
-					<li class="dropdown user">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img alt="" src="/media/image/avatar1_small.jpg" />
-						<span class="username"><?=@$account_name?></span>
-						
-						</a>
-					</li>
+
+
+					<li><a href="#"><? echo @$account_name?></a></li>
 					<li><a href="/dashboard/editmypsd">修改密码</a></li>				
 					<li><a href="/dashboard/logout">注销</a></li>
 					

@@ -11,29 +11,35 @@
 						  ->get("t_project_workunit");
 			return $q->num_rows() > 0;
 		}
-		public function AddWorkUnit($unit_name,$price,$workunit,$bh) {
+		public function AddWorkUnit($unit_name,$price,$workunit,$bh,$seq) {
 			//echo "mysql".$unit_name."mysql";
 			$data = array("unitname"=>$unit_name,
 			              "price"=>$price,
 			              "sts"=>1,
 			              "workunit"=>$workunit,
+			              "seq"=>$seq,
 			              "bh"=>$bh);//"pcontent"=>$pcontent);
 			$this->db->insert("t_project_workunit", $data);
 			return ;
 		}
 
-
-
-		public function AddProject($project_code, $project_name,$startdate,$enddate,$pcontent) {
+		public function AddProject($project_code, $project_name,$startdate,$enddate,$pcontent,$project_seq) {
 			$data = array("project_code"=>$project_code,
 			              "project_name"=>$project_name,
 			              "startdate"=>$startdate,
 			              "sts"=>1,
 			              "isavailable"=>1,
+			              "seq"=>$project_seq,
 			              "enddate"=>$enddate,
 			              "pcontent"=>$pcontent);
 			$this->db->insert("t_project", $data);
 			return ;
+		}
+		public function Page_Search_Project_byUser($uname,$i,$j) {
+			$q=$this->db->query("select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
+					from t_project_user as t join t_project as r
+					where t.sts=1 and r.isavailable=1 and t.uname='".$uname."' and t.project_id = r.id order by r.seq asc limit $i,$j;");
+			return $q->result_array();
 		}
 		public function Search_Project_byUser($uname) {
 			$q=$this->db->query("select r.id,r.project_code,r.project_name,r.startdate,r.enddate,r.sts,r.pcontent
@@ -41,7 +47,6 @@
 					where t.sts=1 and r.isavailable=1 and t.uname='".$uname."' and t.project_id = r.id;");
 			return $q->result_array();
 		}
-
 		/////////
 		public function Search_worklog_byid($work_log_id){
 			$q = $this->db->select("work_log_id")
@@ -58,15 +63,47 @@
 			return ;
 		}
 		public function Search_Work_byUser($uname) {
-			$q=$this->db->query("select t.work_log_id,r.project_code,r.project_name,t.logdate,t.sts,t.shcontent,t.workunit,t.price,t.je,t.projectsum,t.bh
+			// $q=$this->db->query("select t.work_log_id,r.project_code,r.project_name,t.logdate,t.sts,t.shcontent,t.workunit,t.price,t.je,t.projectsum,t.bh
+			// 		from t_work_log_project as t join t_project as r
+			// 		where t.isavailable=1 and t.uname='".$uname."' and t.project_id = r.id;");
+			
+			// $q=$this->db->query("select work_log_id 
+			///		from t_work_log_project 
+			///		where isavailable=1 and uname='".$uname."'");
+
+			$q = $this->db->select("work_log_id")
+						  ->where("uname", $uname)
+						  ->where("isavailable", 1)
+						  ->get("t_work_log_project");			
+			return $q->result_array();
+		}
+		public function Page_Search_Work_byUser($uname,$i,$j) {
+			$q=$this->db->query("select t.work_log_id,r.project_code,
+				r.project_name,t.logdate,t.sts,t.shcontent,t.workunit,
+				t.price,t.je,t.projectsum,t.bh,t.starttime,t.endtime,t.shdate
 					from t_work_log_project as t join t_project as r
-					where t.isavailable=1 and t.uname='".$uname."' and t.project_id = r.id;");
+					where t.isavailable=1 and t.uname='".$uname."' and t.project_id = r.id order by t.work_log_id desc limit $i,$j;");
 			return $q->result_array();
 		}
 		public function Search_All_Work(){
-			$q=$this->db->query("select r.project_code,r.project_name,t.work_log_id,t.logdate,t.sts,t.shcontent,t.workunit,t.price,t.je,t.projectsum,t.username,t.shrname,t.bh
-					from t_work_log_project as t join t_project as r
-					where t.isavailable=1 and t.project_id = r.id;");
+			// $q=$this->db->query("select r.project_code,r.project_name,t.work_log_id,t.logdate,t.sts,t.shcontent,t.workunit,t.price,t.je,t.projectsum,t.username,t.shrname,t.bh
+			// 		from t_work_log_project as t join t_project as r
+			// 		where t.isavailable=1 and t.project_id = r.id;");
+			
+			// $q=$this->db->query("select work_log_id
+			// 		from t_work_log_project 
+			// 		where isavailable=1 ");
+			$q = $this->db->select("work_log_id")
+						  ->where("isavailable", 1)
+						  ->get("t_work_log_project");				
+			return $q->result_array();
+		}
+		public function Page_Search_All_Work($i,$j){
+			$q=$this->db->query("select r.project_code,r.project_name,t.work_log_id,
+				t.logdate,t.sts,t.shcontent,t.workunit,t.price,
+				t.je,t.projectsum,t.username,t.shrname,t.bh,t.starttime,t.endtime,t.shdate 
+				from t_work_log_project as t join t_project as r
+				where t.isavailable=1 and t.project_id = r.id order by t.work_log_id desc limit $i,$j;");
 			return $q->result_array();
 		}
 		//public function Search_user_not_boss()
@@ -74,6 +111,14 @@
 			$q = $this->db->select("project_code,project_name,startdate,enddate,sts,pcontent")
 						  ->where("isavailable",1)
 						  ->get("t_project");
+
+			return $q->result_array();
+		}
+		public function Page_SearchAllProject($i,$j) {
+			$q = $this->db->select("project_code,project_name,startdate,enddate,sts,pcontent")
+						  ->where("isavailable",1)
+						  ->order_by("seq","asc")
+						  ->get("t_project",$j,$i);
 
 			return $q->result_array();
 		}
@@ -90,8 +135,16 @@
 
 			return $q->result_array();
 		}
-		public function Search_Unit_by_Bh($bh) {
+		public function Page_Search_Unit($i,$j) {
 			$q = $this->db->select("unitname,price,workunit,bh")
+						  ->where("sts",1)
+						  ->order_by("seq","asc")
+						  ->get("t_project_workunit",$j,$i);
+
+			return $q->result_array();
+		}
+		public function Search_Unit_by_Bh($bh) {
+			$q = $this->db->select("unitname,price,workunit,bh,seq")
 						  ->where("bh",$bh)
 						  ->where("sts",1)
 						  ->get("t_project_workunit");
@@ -99,16 +152,17 @@
 			$r=$q->row_array(0);
 			return $r  ;
 		}
-		public function EditWorkUnit($unit_name,$price,$workunit,$bh) {
+		public function EditWorkUnit($unit_name,$price,$workunit,$bh,$seq) {
 			$this->db->where("bh", $bh);
 			$this->db->where("sts", 1);
 			$this->db->set("unitname",$unit_name);
 			$this->db->set("price",$price);
 			$this->db->set("workunit",$workunit);
+			$this->db->set("seq",$seq);
 			$this->db->update("t_project_workunit");
 			return ;
 		}
-		public function editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent) {
+		public function editproject($project_code,$project_name,$sts,$startdate,$enddate,$pcontent,$project_seq) {
 			$this->db->where("project_code", $project_code);
 			$this->db->where("isavailable", 1);
 			$this->db->set("project_name",$project_name);
@@ -116,6 +170,7 @@
 			$this->db->set("pcontent",$pcontent);
 			$this->db->set("startdate",$startdate);
 			$this->db->set("enddate",$enddate);
+			$this->db->set("seq",$project_seq);
 			$this->db->update("t_project");
 			return ;
 		}
@@ -136,7 +191,7 @@
 		}
 		
 		public function SearchProject_by_code($project_code) {
-			$q = $this->db->select("project_code,project_name,sts,pcontent,startdate,enddate")
+			$q = $this->db->select("project_code,project_name,sts,pcontent,startdate,enddate,seq")
 						  ->where("project_code", $project_code)
 						  ->where("isavailable", 1)
 						  ->get("t_project");
@@ -165,23 +220,53 @@
 
 		}
 		public function Search_JZResult_By_Sts($sts){
+			// $q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
+			// 	r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+			// 	from t_work_log_project as r join t_project as t
+			// 	where r.isavailable=1 and r.sts = '".$sts."' and t.id=r.project_id";
+			// $q="select work_log_id
+			// 	from t_work_log_project 
+			// 	where isavailable=1 and sts = '".$sts."'";
+			// $r = $this->db->query($q);
+			$r = $this->db->select("work_log_id")
+						  ->where("isavailable", 1)
+						  ->where("sts", $sts)
+						  ->get("t_work_log_project");	
+			return 	$r->result_array();
+		}
+		public function Page_Search_JZResult_By_Sts($sts,$i,$j){
 			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
-				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit,r.logdate,r.shdate,r.starttime,r.endtime
 				from t_work_log_project as r join t_project as t
-				where r.isavailable=1 and r.sts = '".$sts."' and t.id=r.project_id";
+				where r.isavailable=1 and r.sts = '".$sts."' and t.id=r.project_id order by r.work_log_id desc limit $i,$j";
 				// select t.project_code,t.project_name,t.sts
 				// r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
 				// from t_work_log_project as r join t_project as t
 				// where r.shr = "admin" and t.id=r.project_id;
 			$r = $this->db->query($q);
 			return 	$r->result_array();
-		}
-		
+		}		
 		public function Search_SHResult_By_role($uname){
+			// $q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
+			// 	r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+			// 	from t_work_log_project as r join t_project as t
+			// 	where r.isavailable=1 and r.shr = '".$uname."' and t.id=r.project_id";		
+			// $q="select work_log_id
+			// 	from t_work_log_project 
+			// 	where isavailable=1 and shr = '".$uname."' ";
+			// $r = $this->db->query($q);
+
+			$r = $this->db->select("work_log_id")
+						  ->where("isavailable", 1)
+						  ->where("shr", $uname)
+						  ->get("t_work_log_project");
+			return 	$r->result_array();
+		}
+		public function Page_Search_SHResult_By_role($uname,$i,$j){
 			$q="select t.id,t.project_code,t.project_name,r.sts,r.work_log_id,
-				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
+				r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit,r.logdate,r.shdate,r.starttime,r.endtime
 				from t_work_log_project as r join t_project as t
-				where r.isavailable=1 and r.shr = '".$uname."' and t.id=r.project_id";
+				where r.isavailable=1 and r.shr = '".$uname."' and t.id=r.project_id order by r.work_log_id desc limit $i,$j";
 				// select t.project_code,t.project_name,t.sts
 				// r.uname,r.projectsum,r.price,r.je,r.bh,r.workunit
 				// from t_work_log_project as r join t_project as t
@@ -203,13 +288,14 @@
 					$update_sts=3;
 					$shcontent="审核通过";
 				}
-				else if($result==0){
+				else if($result==2){
 					$update_sts=0;
-					$shcontent="提交被拒绝";
+					$shcontent="审核不通过";
 				}
 				$this->db->where("work_log_id", $work_log_id);
 				$this->db->where("isavailable", 1);
 				$this->db->set("sts", $update_sts);
+				$this->db->set("shdate",gmdate("Y-m-d H:i:s", mktime() + 8 * 3600));
 				$this->db->set("shcontent", $shcontent);
 				$this->db->update("t_work_log_project");
 
@@ -218,11 +304,12 @@
 				if($result==1){	
 					$update_sts=4;
 				}
-				else if($result==0){
+				else if($result==2){
 					$update_sts=0;
 				}
 				$this->db->where("work_log_id", $work_log_id);
 				$this->db->where("isavailable", 1);
+				$this->db->set("endtime",gmdate("Y-m-d H:i:s", mktime() + 8 * 3600));
 				$this->db->set("sts", $update_sts);
 				$this->db->update("t_work_log_project");
 			}

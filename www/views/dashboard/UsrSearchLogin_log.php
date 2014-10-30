@@ -27,7 +27,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <label class="col-xs-10" >
         <table class='table table-hover table-bordered' >
                 <thead>
-                    <tr><td>登录ip地址</td><td>登录时间</td></tr>
+                    <tr><td>登录时间</td><td>登录ip地址</td></tr>
                 </thead>
                 <tbody >
     <?php
@@ -37,9 +37,9 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         //project_code,project_name,startdate,enddate,sts,pcontent
         foreach($Search_result as $row){
             echo "<tr> <td>";
-            echo $row['login_ip'];
+            echo $row['login_datetime'];
             echo "</td><td>"; 
-            echo $row['login_datetime'];            
+            echo $row['login_ip'];      
             echo "</td></tr>";
         }
     }
@@ -49,9 +49,34 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         </label>
 </div>
 
-
-
-
+<form action="/dashboard/UsrSearchLogin_log" method='post'>
+<div align=center id="page_links">
+<?echo $page_links;?>
+&nbsp&nbsp&nbsp
+<?  $totalpages=ceil($config['total_rows']/$config['per_page']);
+    echo "共".$totalpages."页";
+    //if($totalpages>1)
+?>
+&nbsp&nbsp&nbsp
+跳转到第
+<select style="position:relative; top:5px;height:20px;width:50px" name="cur_page">
+    <?php 
+        for($i=0;$i<$totalpages;$i++){
+            $j=$i*$config['per_page'];
+            if($j==$config['cur_page'])
+                echo "<option value='".$j."' selected='true'>".($i+1)."</option>";
+            else
+                echo "<option value='".$j."'>".($i+1)."</option>";
+        }
+    ?>
+</select>&nbsp
+页
+<font size=10>
+<button type="submit" style="position:relative; top:10px;height:25px;width:50px">跳转</button>
+</font>
+</div>
+</form>
+<br><br>
 
 	</div>
 	</div>

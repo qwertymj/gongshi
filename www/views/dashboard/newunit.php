@@ -19,6 +19,24 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     <?php } ?>
 
 	<form action="/dashboard/newunit" method='post'>
+        <div class="control-group">
+            <label class="control-label">编号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="bh">
+            </div>
+        </div>
+		<div class="control-group">
+			<label class="control-label">工时数据名称</label>
+			<div class="controls">
+				<input type="text" class="span6 m-wrap" name="workunit">
+			</div>
+		</div>
+        <div class="control-group">
+            <label class="control-label">工时数据序号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="seq">
+            </div>
+        </div>
 		<div class="control-group">
 			<label class="control-label">工时数据单位名</label>
 			<div class="controls">
@@ -31,22 +49,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 				<input type="text" class="span6 m-wrap" name="price">
 			</div>
 		</div>
-
-		<div class="control-group">
-			<label class="control-label">工时数据名称</label>
-			<div class="controls">
-				<input type="text" class="span6 m-wrap" name="workunit">
-			</div>
-		</div>
-		
-
-        <div class="control-group">
-            <label class="control-label">编号</label>
-            <div class="controls">
-                <input type="text" class="span6 m-wrap" name="bh">
-            </div>
-        </div>
-        <button type="submit" class='btn blue'>新建单位</button>
+        <button type="submit" class='btn blue'>新建工时数据</button>
 	</form>
 
 	</div>

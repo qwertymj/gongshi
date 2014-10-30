@@ -53,7 +53,7 @@ CREATE TABLE t_work_log_project(
     work_log_id int PRIMARY KEY AUTO_INCREMENT,
     project_id int, # references `t_project`.`id` ok
     starttime date,
-    endtime date,
+    endtime date,#结账日期
     hourcount int, # 工作时长 ok
     logdate date, # 登记时间 
     uname varchar(50), # 报告人名字 ok

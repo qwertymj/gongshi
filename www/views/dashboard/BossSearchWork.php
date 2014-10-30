@@ -28,8 +28,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         <table class='table table-hover table-bordered' >
                 <thead>
                     <tr><td>项目代码</td><td>项目名称</td>
-                        <td>报告状态</td><td>报告编号</td>
-                        <td>提交人</td><td>审核人</td>
+                        <td>报告状态</td><td>报告编号</td><td>申请时间</td>
+                        <td>报告人</td><td>审核人</td>
                         <td>工时数据数量</td><td>单价</td>
                         <td>金额</td><td>数据项编号</td><td>数据项名称</td><td></td>
                 </tr>
@@ -39,6 +39,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     //var_dump($Search_result);
     $sts=array("报告已被取消","项目待申报","报告待审核","报告待结账","报告已结账");
     $total=0;
+    //$l=substr($_SERVER['PHP_SELF'] , strrpos($_SERVER['PHP_SELF'] , '/') + 1);
+
     if(@$Search_result && $Search_result)
     {
         //project_code,project_name,startdate,enddate,sts,pcontent
@@ -52,6 +54,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo $sts[$row['sts']];
             echo "</td><td>";
             echo $row['work_log_id'];
+            echo "</td><td>";
+            echo $row['logdate'];
             echo "</td><td>";
             echo $row['username'];            
             echo "</td><td>";
@@ -67,12 +71,13 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo "</td><td>";
             echo $row['workunit'];?>
             </td><td>
-                <form action="/dashboard/delete_work" method='post'>
+                <form action="/dashboard/BossSearchWork" method='post'>
                     <input type="hidden" name="work_log_id" value=<?php echo $row["work_log_id"]; ?> >
-                    <input type="hidden" name="boss" value=<?php echo 1; ?> >
-                    
+                    <input type="hidden" name="delete_work" value=<?php echo 1; ?> >
+                    <input type="hidden" name="cur_page">
+                     
                     <div align="center">
-                        <button type="submit" class="btn" onclick="return show_confirm(this)">删除工时报告</button>
+                        <button type="submit" class="btn blue" onclick="return show_confirm(this)" value=<?php echo $row["work_log_id"]; ?>>删除</button>
                     </div>
 
                 </form>
@@ -185,15 +190,51 @@ function num_to_rmb($num){
 // }
 ?>
 
-
     <script type="text/javascript">
+        <? $per_page = json_encode($config['per_page']);
+        echo "var per_page =".$per_page.";";?>
         function show_confirm(t)
         {
-
-            var msg='确认删除'+$(t).val()+'吗';
-            return confirm(msg);
+            var msg='确认删除工时报告'+$(t).val()+'吗';
+            if(confirm(msg)){
+                //alert($("#page_links strong:first").text());
+                $("[name='cur_page']").val( ($("#page_links strong:first").text()-1)*per_page);
+                return true;
+            }
+            else
+                return false;
         }
-    </script>
+
+    </script> 
+
+<form action="/dashboard/BossSearchWork" method='post'>
+<div align=center id="page_links">
+<?echo $page_links;?>
+&nbsp&nbsp&nbsp
+<?  $totalpages=ceil($config['total_rows']/$config['per_page']);
+    echo "共".$totalpages."页";
+    //if($totalpages>1)
+?>
+&nbsp&nbsp&nbsp
+跳转到第
+<select style="position:relative; top:5px;height:20px;width:50px" name="cur_page">
+    <?php 
+        for($i=0;$i<$totalpages;$i++){
+            $j=$i*$config['per_page'];
+            if($j==$config['cur_page'])
+                echo "<option value='".$j."' selected='true'>".($i+1)."</option>";
+            else
+                echo "<option value='".$j."'>".($i+1)."</option>";
+        }
+    ?>
+</select>&nbsp
+页
+<font size=10>
+<button type="submit" style="position:relative; top:10px;height:25px;width:50px">跳转</button>
+</font>
+</div>
+</form>
+<br><br>
 
     </div>
     </div>

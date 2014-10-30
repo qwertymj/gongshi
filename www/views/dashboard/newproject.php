@@ -32,7 +32,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 				<input type="text" class="span6 m-wrap" name="project_name">
 			</div>
 		</div>
-
+        <div class="control-group">
+            <label class="control-label">项目序号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="project_seq">
+            </div>
+        </div>
 
 
 <div class="form-group">
@@ -46,9 +51,10 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 </thead>
                 <tbody id='startenddate'>
                 <tr>
-                    <td><input type='text' class='form-control' name='startdate'/>
+                    <td>
+                        <input type='text' class='Wdate form-control' name='startdate' onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
                     </td>
-                    <td><input type='text' class='form-control' name='enddate'/>
+                    <td><input type='text' class='Wdate form-control' name='enddate' onclick="WdatePicker({isShowClear:true,readOnly:true})"/>
                     </td></tr>
 
                 </tbody>

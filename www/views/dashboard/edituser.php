@@ -32,7 +32,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 <input type="hidden" class="span6 m-wrap" name="name" value=<?php echo $userinfo['name'];?> >
             </div>
         </div>
-
+        <div class="control-group">
+            <label class="control-label">员工序号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="seq" value=<?php echo $userinfo['seq'];?> >
+            </div>
+        </div>
 
 
         <div class="control-group">

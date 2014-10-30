@@ -124,10 +124,10 @@ class CI_Pagination {
 		$num_pages = ceil($this->total_rows / $this->per_page);
 
 		// Is there only one page? Hm... nothing more to do here then.
-		if ($num_pages == 1)
-		{
-			return '';
-		}
+		//if ($num_pages == 1)
+		//{
+		//	return '';
+		//}
 
 		// Set the base page index for starting page number
 		if ($this->use_page_numbers)
@@ -224,12 +224,25 @@ class CI_Pagination {
 		// And here we go...
 		$output = '';
 
-		// Render the "First" link
-		if  ($this->first_link !== FALSE AND $this->cur_page > ($this->num_links + 1))
+		// Render the "First" link 这个是原来的写法，现在修改一下 
+	/*	if  ($this->first_link !== FALSE AND $this->cur_page > ($this->num_links + 1))
 		{
 			$first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
 			$output .= $this->first_tag_open.'<a '.$this->anchor_class.'href="'.$first_url.'">'.$this->first_link.'</a>'.$this->first_tag_close;
-		}
+		}*/
+ 
+
+        // Render the "First" link 新增，不是首页都一直显示，而且有超链接 
+  if  ($this->cur_page > 1) 
+  { 
+   $output .= $this->first_tag_open.'<a href="'.$this->base_url.'">'.$this->first_link.'</a>'.$this->first_tag_close; 
+  } 
+        // Render the "First" link 如果是首页，同样显示，但是没有超链接功能 
+  if  ($this->cur_page == 1) 
+  { 
+   $output .= $this->first_tag_open.$this->first_link.$this->first_tag_close; 
+  } 
+
 
 		// Render the "previous" link
 		if  ($this->prev_link !== FALSE AND $this->cur_page != 1)
@@ -254,6 +267,14 @@ class CI_Pagination {
 			}
 
 		}
+ 
+// Render the "previous" link 注意：这里是新增不是替换原来的啊。如果为第一页的时候，同样显示上一页标签，但是没有超链接 
+  if  ($this->cur_page == 1) 
+  { 
+   $i = $uri_page_number - $this->per_page; 
+   if ($i == 0) $i = ''; 
+   $output .= $this->prev_tag_open.$this->prev_link.$this->prev_tag_close; 
+  } 
 
 		// Render the pages
 		if ($this->display_pages !== FALSE)
@@ -309,9 +330,15 @@ class CI_Pagination {
 
 			$output .= $this->next_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$this->prefix.$i.$this->suffix.'">'.$this->next_link.'</a>'.$this->next_tag_close;
 		}
+ 
+// Render the "next" link 注意：这里是新增不是替换原来的啊。如果是最后一页，同样显示，只是没有超链接 
+  if ($this->cur_page == $num_pages) 
+  { 
+   $output .= $this->next_tag_open.$this->next_link.$this->next_tag_close; 
+  } 
 
-		// Render the "Last" link
-		if ($this->last_link !== FALSE AND ($this->cur_page + $this->num_links) < $num_pages)
+		// Render the "Last" link  这个是原来的写法，这里需要替换哦。
+/*		if ($this->last_link !== FALSE AND ($this->cur_page + $this->num_links) < $num_pages)
 		{
 			if ($this->use_page_numbers)
 			{
@@ -322,7 +349,22 @@ class CI_Pagination {
 				$i = (($num_pages * $this->per_page) - $this->per_page);
 			}
 			$output .= $this->last_tag_open.'<a '.$this->anchor_class.'href="'.$this->base_url.$this->prefix.$i.$this->suffix.'">'.$this->last_link.'</a>'.$this->last_tag_close;
-		}
+		}*/
+
+        
+        // Render the "Last" link 如果不是最后一页，同样显示 
+  if ($this->cur_page < $num_pages) 
+  { 
+   $i = (($num_pages * $this->per_page) - $this->per_page); 
+   $output .= $this->last_tag_open.'<a href="'.$this->base_url.$i.'">'.$this->last_link.'</a>'.$this->last_tag_close; 
+  } 
+        
+        // Render the "Last" link 如果是最后一页，同样显示，但是没有超链接 
+  if ($this->cur_page == $num_pages) 
+  { 
+   $i = (($num_pages * $this->per_page) - $this->per_page); 
+   $output .= $this->last_tag_open.$this->last_link.$this->last_tag_close; 
+  } 
 
 		// Kill double slashes.  Note: Sometimes we can end up with a double slash
 		// in the penultimate link so we'll kill all double slashes.

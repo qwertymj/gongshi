@@ -24,7 +24,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
     
     <label class="col-xs-2 control-label" > <font size="4">员工列表</font>
             <form action="/dashboard/newuser" class="pull-right" method='get'>
-                <button type="submit" class="btn" >新建员工</button>
+                <button type="submit" class="btn blue" >新建员工</button>
             </form>
     </label>
 
@@ -55,7 +55,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
                 <div align="center">
 
-                    <button type="submit" class="btn" >修改员工信息</button>
+                    <button type="submit" class="btn blue" >修改员工信息</button>
                 </div>
             </form>
             </td><td>
@@ -64,16 +64,17 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
                 <div align="center">
 
-                    <button type="submit" class="btn" >修改员工密码</button>
+                    <button type="submit" class="btn blue" >修改员工密码</button>
                 </div>
             </form>
             </td><td>
-            <form action="/dashboard/deleteuser" method='post'>
+            <form action="/dashboard/User_Maintain" method='post'>
                 <input type="hidden" name="name" value=<?php echo $row["name"]; ?> >
-
+                <input type="hidden" name="deleteuser" value=<?php echo 1; ?> >
+                <input type="hidden" name="cur_page" value>
                 <div align="center">
 
-                    <button type="submit" class="btn" onclick="return show_confirm(this)" 
+                    <button type="submit" class="btn blue" onclick="return show_confirm(this)" 
                     value=<?echo $row["name"];?>>
                     删除
                     </button>
@@ -92,14 +93,50 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 
 
     <script type="text/javascript">
+        <? $per_page = json_encode($config['per_page']);
+        echo "var per_page =".$per_page.";";?>
         function show_confirm(t)
         {
-
-            var msg='确认删除'+$(t).val()+'吗';
-            return confirm(msg);
+            var msg='确认删除员工'+$(t).val()+'吗';
+            if(confirm(msg)){
+                //alert($("#page_links strong:first").text());
+                $("[name='cur_page']").val( ($("#page_links strong:first").text()-1)*per_page);
+                return true;
+            }
+            else
+                return false;
         }
-    </script>
 
+    </script> 
+
+<form action="/dashboard/User_Maintain" method='post'>
+<div align=center id="page_links">
+<?echo $page_links;?>
+&nbsp&nbsp&nbsp
+<?  $totalpages=ceil($config['total_rows']/$config['per_page']);
+    echo "共".$totalpages."页";
+    //if($totalpages>1)
+?>
+&nbsp&nbsp&nbsp
+跳转到第
+<select style="position:relative; top:5px;height:20px;width:50px" name="cur_page">
+    <?php 
+        for($i=0;$i<$totalpages;$i++){
+            $j=$i*$config['per_page'];
+            if($j==$config['cur_page'])
+                echo "<option value='".$j."' selected='true'>".($i+1)."</option>";
+            else
+                echo "<option value='".$j."'>".($i+1)."</option>";
+        }
+    ?>
+</select>&nbsp
+页
+<font size=10>
+<button type="submit" style="position:relative; top:10px;height:25px;width:50px">跳转</button>
+</font>
+</div>
+</form>
+<br><br>
 	</div>
 	</div>
 </div>

@@ -63,7 +63,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                 
                 <div align="center">
 
-                    <button type="submit" class="btn" >新建工时报告</button>
+                    <button type="submit" class="btn blue" >新建工时报告</button>
                 </div>
             </form>
             <?php 
@@ -78,7 +78,34 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         </label>
 </div>
 
-
+<form action="/dashboard/UsrSearchProject" method='post'>
+<div align=center id="page_links">
+<?echo $page_links;?>
+&nbsp&nbsp&nbsp
+<?  $totalpages=ceil($config['total_rows']/$config['per_page']);
+    echo "共".$totalpages."页";
+    //if($totalpages>1)
+?>
+&nbsp&nbsp&nbsp
+跳转到第
+<select style="position:relative; top:5px;height:20px;width:50px" name="cur_page">
+    <?php 
+        for($i=0;$i<$totalpages;$i++){
+            $j=$i*$config['per_page'];
+            if($j==$config['cur_page'])
+                echo "<option value='".$j."' selected='true'>".($i+1)."</option>";
+            else
+                echo "<option value='".$j."'>".($i+1)."</option>";
+        }
+    ?>
+</select>&nbsp
+页
+<font size=10>
+<button type="submit" style="position:relative; top:10px;height:25px;width:50px">跳转</button>
+</font>
+</div>
+</form>
+<br><br>
 
 
 

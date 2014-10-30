@@ -30,6 +30,12 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 				<input type="text" class="span6 m-wrap" name="username">
 			</div>
 		</div>
+        <div class="control-group">
+            <label class="control-label">员工序号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="seq">
+            </div>
+        </div>
 		<div class="control-group">
 			<label class="control-label">密码</label>
 			<div class="controls">
@@ -50,7 +56,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             </div>
         </div>
 		<div class="form-group">
-        <label for="" class="col-xs-2 control-label">员工种类</label>
+        <label for="" class="col-xs-2 control-label">员工权限</label>
         <label for="" class="col-xs-8">
             <table class="table table-hover col-xs-8">
                 <tbody>
