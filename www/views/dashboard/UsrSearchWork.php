@@ -6,6 +6,10 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 	<div class="span12">
 
     <?php
+    if(@$addsuccess && $addsuccess)
+    {
+        ?> <div class="alert alert-success">添加成功！</div> <?php
+    }
     if(@$deletesuccess && $deletesuccess)
     {
         ?> <div class="alert alert-success">删除成功！</div> <?php
@@ -52,7 +56,10 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo "</td><td>";
             echo $sts[$row['sts']];
             echo "</td><td>";
-            echo $row['work_log_id'];
+            $a=$row['work_log_id'];
+            if(strlen($a)<6)
+                echo substr_replace('000000', $a, 0 - strlen($a));
+            else echo $a;
             echo "</td><td>";
             echo $row['logdate'];
             echo "</td><td>";

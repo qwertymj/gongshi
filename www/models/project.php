@@ -11,6 +11,15 @@
 						  ->get("t_project_workunit");
 			return $q->num_rows() > 0;
 		}
+		public function isnewBhExist($bh,$id) {
+			// $q = $this->db->select("bh")
+			// 			  ->where("bh", $bh)
+			// 			  ->where("sts", 1)
+			// 			  ->get("t_project_workunit");
+			$q=$this->db->query("select bh from t_project_workunit where 
+				bh='".$bh."' and id!='".$id."' and sts=1");
+			return $q->num_rows() > 0;
+		}
 		public function AddWorkUnit($unit_name,$price,$workunit,$bh,$seq) {
 			//echo "mysql".$unit_name."mysql";
 			$data = array("unitname"=>$unit_name,
@@ -136,7 +145,7 @@
 			return $q->result_array();
 		}
 		public function Page_Search_Unit($i,$j) {
-			$q = $this->db->select("unitname,price,workunit,bh")
+			$q = $this->db->select("unitname,price,workunit,bh,id")
 						  ->where("sts",1)
 						  ->order_by("seq","asc")
 						  ->get("t_project_workunit",$j,$i);
@@ -144,7 +153,7 @@
 			return $q->result_array();
 		}
 		public function Search_Unit_by_Bh($bh) {
-			$q = $this->db->select("unitname,price,workunit,bh,seq")
+			$q = $this->db->select("unitname,price,workunit,bh,seq,id")
 						  ->where("bh",$bh)
 						  ->where("sts",1)
 						  ->get("t_project_workunit");
@@ -152,11 +161,21 @@
 			$r=$q->row_array(0);
 			return $r  ;
 		}
-		public function EditWorkUnit($unit_name,$price,$workunit,$bh,$seq) {
-			$this->db->where("bh", $bh);
+		public function Search_Unit_by_id($id) {
+			$q = $this->db->select("unitname,price,workunit,bh,seq,id")
+						  ->where("id",$id)
+						  ->where("sts",1)
+						  ->get("t_project_workunit");
+
+			$r=$q->row_array(0);
+			return $r  ;
+		}
+		public function EditWorkUnit($unit_name,$price,$workunit,$bh,$seq,$id) {
+			$this->db->where("id", $id);
 			$this->db->where("sts", 1);
 			$this->db->set("unitname",$unit_name);
 			$this->db->set("price",$price);
+			$this->db->set("bh",$bh);
 			$this->db->set("workunit",$workunit);
 			$this->db->set("seq",$seq);
 			$this->db->update("t_project_workunit");

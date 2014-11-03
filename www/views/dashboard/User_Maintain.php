@@ -48,16 +48,9 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             echo "</td><td>";
             echo $row['job'];
             echo "</td><td>";?>
-
-           
-           <form action="/dashboard/edituser" method='get'>
-                <input type="hidden" name="name" value=<?php echo $row['name']; ?> >
-
-                <div align="center">
-
-                    <button type="submit" class="btn blue" >修改员工信息</button>
-                </div>
-            </form>
+<div align="center">
+                <a href="/dashboard/edituser?name=<?=$row['name']?>"><button class="btn blue" >修改员工信息</button></a>
+            </div>
             </td><td>
            <form action="/dashboard/edituserpsd" method='get'>
                 <input type="hidden" name="name" value=<?php echo $row['name']; ?> >

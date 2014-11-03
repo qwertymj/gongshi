@@ -34,7 +34,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label">当前项目序号</label>
+            <label class="control-label">项目序号</label>
             <div class="controls">
                 <input type="text" class="span6 m-wrap" name="project_seq" value=<?php echo $project_info['seq'];?>>
             </div>
@@ -80,7 +80,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         </div>
 		<button type="submit" class='btn blue'>修改项目</button>
 	</form>
-
+<br><br>
 	</div>
 	</div>
 </div>

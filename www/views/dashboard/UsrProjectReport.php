@@ -37,7 +37,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                             
                             foreach($Search_result as $r){
                                 if($r['sts'])
-                                    echo "<option value='".$r['project_code']."'>".$r['project_code']."</option>";   
+                                    echo "<option value='".$r['project_code']."'>".$r['project_code']."     ".$r['project_name']."</option>";   
                                 }?>
                         </select>
                     </td>
@@ -116,7 +116,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
                     <td>
                         <select name='project_unit_bh[]' onChange="changeData(this)">
                         <?php foreach($all_unit as $unit){
-                            echo "<option value='".$unit['bh']."'>".$unit['bh']."</option>";
+                            echo "<option value='".$unit['bh']."'>".$unit['bh']."    ".$unit['workunit']."</option>";
                         }
                         ?>
                     </select>
@@ -208,7 +208,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
             <button type="submit" class='btn blue'>确定</button>
             <input type="button" class='btn blue' style="position:relative;left:20px; " onclick="javascript:history.go(-1);" value="取消" />
 	</form>
-
+<br><br>
 	</div>
 	</div>
 </div>

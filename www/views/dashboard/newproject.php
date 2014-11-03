@@ -6,7 +6,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 	<div class="span12">
 
     <?php
-    if(@$addsuccess && $addsuccess)
+    if(@$success && $success)
     {
         ?> <div class="alert alert-success">添加成功！</div> <?php
     }
@@ -114,7 +114,7 @@ include(VIEWPATH."dashboard/dashboard_header.php");
         </div>
 		<button type="submit" class='btn blue'>新建项目</button>
 	</form>
-
+<br><br>
 	</div>
 	</div>
 </div>

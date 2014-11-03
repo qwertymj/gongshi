@@ -34,6 +34,10 @@
 	<link href="/media/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
 	<!-- END PAGE LEVEL STYLES -->
 	<link rel="shortcut icon" href="/media/image/favicon.ico" />
+        <style>
+		form { margin: 0px; } 
+		.btn { padding: 5px; }
+	</style>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->

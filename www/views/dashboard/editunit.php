@@ -24,10 +24,15 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 <div class="control-group">
     
         <div class="controls">
-            <input type="hidden" class="span6 m-wrap" name="unit_bh" value=<?php echo $unit_info['bh'];?>>
+            <input type="hidden" class="span6 m-wrap" name="unit_id" value=<?php echo $unit_info['id'];?>>
+            <input type="hidden" class="span6 m-wrap" name="unit_oldbh" value=<?php echo $unit_info['bh'];?>>
         </div>
+
         <div class="control-group">
-            <label class="control-label" >工时数据编号:<?php echo $unit_info['bh'];?></label>
+            <label class="control-label">工时数据编号</label>
+            <div class="controls">
+                <input type="text" class="span6 m-wrap" name="unit_bh" value=<?php echo $unit_info['bh'];?>>
+            </div>
         </div>
         <div class="control-group">
             <label class="control-label">工时数据名称</label>

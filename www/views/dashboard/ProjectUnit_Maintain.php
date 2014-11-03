@@ -52,6 +52,8 @@ include(VIEWPATH."dashboard/dashboard_header.php");
 ?>
             <form action="/dashboard/editunit" method='get'>
                 <input type="hidden" name="unit_bh" value=<?php echo $row["bh"]; ?> >
+                <input type="hidden" name="unit_id" value=<?php echo $row["id"]; ?> >
+                
                 <div align="center">
                     <button type="submit" class="btn blue" >工时数据修改</button>
                 </div>
